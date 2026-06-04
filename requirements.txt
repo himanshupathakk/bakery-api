@@ -5,3 +5,4 @@ flask-jwt-extended
 marshmallow
 python-dotenv
 passlib[bcrypt]
+psycopg2-binary

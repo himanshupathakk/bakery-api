@@ -708,7 +708,7 @@ async function loadHome(){
     const featured=products.filter(p=>p.is_available&&p.stock_quantity>0).slice(0,4);
     document.getElementById('featured-grid').innerHTML=featured.length?featured.map(p=>renderCard(p)).join(''):'<div class="empty-state"><div class="empty-icon">🎂</div><div class="empty-title">No items yet</div><p>Add products via Admin panel</p></div>';
   }catch(e){
-    document.getElementById('featured-grid').innerHTML='<div class="empty-state"><p style="color:var(--primary)">Cannot connect — is the server running on localhost:5000?</p></div>';
+    document.getElementById('featured-grid').innerHTML='<div class="empty-state"><p style="color:var(--primary)">Cannot connect — is the server running on https://bakery-api-digo.onrender.com?</p></div>';
   }
 }
 

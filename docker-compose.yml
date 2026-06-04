@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  api:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=sqlite:///bakery.db
+      - JWT_SECRET_KEY=bakery-secret-key-change-in-prod
+    restart: unless-stopped

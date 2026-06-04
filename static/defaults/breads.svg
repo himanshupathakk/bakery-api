@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#FDF0E6"/>
+  <!-- bread loaf -->
+  <rect x="80" y="170" width="240" height="80" rx="15" fill="#B85E26"/>
+  <ellipse cx="200" cy="170" rx="120" ry="55" fill="#D4793B"/>
+  <ellipse cx="200" cy="165" rx="108" ry="48" fill="#E8956D"/>
+  <!-- score marks -->
+  <path d="M155 125 Q160 165 158 175" stroke="#C4693B" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M200 118 Q205 160 203 172" stroke="#C4693B" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M245 125 Q250 165 248 175" stroke="#C4693B" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- shine -->
+  <ellipse cx="170" cy="148" rx="30" ry="15" fill="#FAD4B0" opacity="0.4"/>
+  <text x="200" y="285" text-anchor="middle" font-family="Georgia" font-size="16" fill="#B85E26" opacity="0.6">Sweet Crumbs</text>
+</svg>

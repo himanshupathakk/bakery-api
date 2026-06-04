@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#FDE8D8"/>
+  <!-- big cookie -->
+  <circle cx="200" cy="155" r="90" fill="#D4793B"/>
+  <circle cx="200" cy="155" r="82" fill="#E8956D"/>
+  <!-- chocolate chips -->
+  <ellipse cx="165" cy="130" rx="12" ry="10" fill="#5C3D2E"/>
+  <ellipse cx="215" cy="120" rx="11" ry="9" fill="#5C3D2E"/>
+  <ellipse cx="240" cy="155" rx="12" ry="10" fill="#5C3D2E"/>
+  <ellipse cx="175" cy="175" rx="11" ry="9" fill="#5C3D2E"/>
+  <ellipse cx="220" cy="180" rx="10" ry="8" fill="#5C3D2E"/>
+  <ellipse cx="185" cy="145" rx="9" ry="8" fill="#5C3D2E"/>
+  <ellipse cx="155" cy="165" rx="10" ry="8" fill="#5C3D2E"/>
+  <!-- texture lines -->
+  <path d="M130 140 Q160 130 180 150" stroke="#C4693B" stroke-width="2" fill="none" opacity="0.4"/>
+  <path d="M210 170 Q240 160 260 175" stroke="#C4693B" stroke-width="2" fill="none" opacity="0.4"/>
+  <text x="200" y="285" text-anchor="middle" font-family="Georgia" font-size="16" fill="#B85E26" opacity="0.6">Sweet Crumbs</text>
+</svg>

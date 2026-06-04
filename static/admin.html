@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sweet Crumbs — Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/css/tabler.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+.page{display:none}.page.active{display:block}
+.tag-badge{display:inline-flex;align-items:center;gap:4px;background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:4px;padding:2px 8px;font-size:.75rem;font-weight:600;margin:2px}
+.toast-wrap{position:fixed;top:1rem;right:1rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem;max-width:320px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:3000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#888}
+.stars{color:#F59E0B}
+</style>
+</head>
+<body class="antialiased">
+<div class="toast-wrap" id="toasts"></div>
+
+<!-- EDIT PRODUCT MODAL -->
+<div class="modal-overlay" id="modal-product">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-product')"><i class="ti ti-x"></i></button>
+    <div class="modal-title"><i class="ti ti-cake text-orange"></i> Edit Product</div>
+    <input type="hidden" id="ep-id">
+    <div class="mb-3"><label class="form-label">Name</label><input class="form-control" id="ep-name"></div>
+    <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" id="ep-desc" rows="3"></textarea></div>
+    <div class="row g-2 mb-3">
+      <div class="col"><label class="form-label">Price (€)</label><input class="form-control" id="ep-price" type="number"></div>
+      <div class="col"><label class="form-label">Stock</label><input class="form-control" id="ep-stock" type="number"></div>
+    </div>
+    <div class="mb-3"><label class="form-label">Category</label><select class="form-select" id="ep-cat"><option value="">-- No Category --</option></select></div>
+    <div class="mb-3"><label class="form-label">Available</label><select class="form-select" id="ep-avail"><option value="true">Yes</option><option value="false">No</option></select></div>
+    <div class="mb-3">
+      <label class="form-label">Product Image</label>
+      <div id="ep-current-img" style="margin-bottom:8px;display:none">
+        <img id="ep-img-preview" src="" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #ddd">
+        <button type="button" onclick="removeProductImage()" style="margin-left:8px;background:none;border:1px solid #ef4444;color:#ef4444;padding:3px 10px;border-radius:6px;cursor:pointer;font-size:12px">Remove</button>
+      </div>
+      <input class="form-control" id="ep-img" type="file" accept="image/*">
+    </div>
+    <div class="d-flex gap-2 justify-content-end">
+      <button class="btn btn-ghost-secondary" onclick="closeModal('modal-product')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProduct()"><i class="ti ti-check me-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT CATEGORY MODAL -->
+<div class="modal-overlay" id="modal-cat">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-cat')"><i class="ti ti-x"></i></button>
+    <div class="modal-title"><i class="ti ti-category text-teal"></i> Edit Category</div>
+    <input type="hidden" id="ec-id">
+    <div class="mb-3"><label class="form-label">Name</label><input class="form-control" id="ec-name"></div>
+    <div class="mb-3"><label class="form-label">Description</label><input class="form-control" id="ec-desc"></div>
+    <div class="d-flex gap-2 justify-content-end">
+      <button class="btn btn-ghost-secondary" onclick="closeModal('modal-cat')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCat()"><i class="ti ti-check me-1"></i>Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper">
+  <!-- SIDEBAR -->
+  <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+    <div class="container-fluid">
+      <h1 class="navbar-brand navbar-brand-autodark">
+        <a href="#" class="d-flex align-items-center gap-2">
+          <i class="ti ti-cake text-orange fs-2"></i>
+          <span>Bakery Admin</span>
+        </a>
+      </h1>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav pt-lg-3">
+          <li class="nav-item"><a class="nav-link" id="nav-dashboard" onclick="go('dashboard',this)" href="#"><span class="nav-link-icon"><i class="ti ti-layout-dashboard"></i></span><span class="nav-link-title">Dashboard</span></a></li>
+          <li class="nav-item mt-2"><span class="nav-link-title text-muted small px-2 text-uppercase">Manage</span></li>
+          <li class="nav-item"><a class="nav-link d-flex align-items-center" id="nav-products" onclick="go('products',this)" href="#"><span class="nav-link-icon"><i class="ti ti-cake"></i></span><span class="nav-link-title flex-fill">Products</span><span class="badge bg-orange-lt ms-auto" id="nb-products">0</span></a></li>
+          <li class="nav-item"><a class="nav-link d-flex align-items-center" id="nav-categories" onclick="go('categories',this)" href="#"><span class="nav-link-icon"><i class="ti ti-category"></i></span><span class="nav-link-title flex-fill">Categories</span><span class="badge bg-teal-lt ms-auto" id="nb-cats">0</span></a></li>
+          <li class="nav-item"><a class="nav-link d-flex align-items-center" id="nav-tags" onclick="go('tags',this)" href="#"><span class="nav-link-icon"><i class="ti ti-tag"></i></span><span class="nav-link-title flex-fill">Tags</span><span class="badge bg-yellow-lt ms-auto" id="nb-tags">0</span></a></li>
+          <li class="nav-item"><a class="nav-link d-flex align-items-center" id="nav-orders" onclick="go('orders',this)" href="#"><span class="nav-link-icon"><i class="ti ti-shopping-cart"></i></span><span class="nav-link-title flex-fill">Orders</span><span class="badge bg-blue-lt ms-auto" id="nb-orders">0</span></a></li>
+          <li class="nav-item"><a class="nav-link d-flex align-items-center" id="nav-stats" onclick="go('stats',this)" href="#"><span class="nav-link-icon"><i class="ti ti-chart-bar"></i></span><span class="nav-link-title flex-fill">Stats</span><span class="badge bg-green-lt ms-auto">NEW</span></a></li>
+          <li class="nav-item"><a class="nav-link d-flex align-items-center" id="nav-reviews" onclick="go('reviews',this)" href="#"><span class="nav-link-icon"><i class="ti ti-star"></i></span><span class="nav-link-title flex-fill">Reviews</span></a></li>
+          <li class="nav-item"><a class="nav-link d-flex align-items-center" id="nav-users" onclick="go('users',this)" href="#"><span class="nav-link-icon"><i class="ti ti-users"></i></span><span class="nav-link-title flex-fill">Users</span></a></li>
+          <li class="nav-item mt-2"><span class="nav-link-title text-muted small px-2 text-uppercase">Account</span></li>
+          <li class="nav-item"><a class="nav-link" id="nav-auth" onclick="go('auth',this)" href="#"><span class="nav-link-icon"><i class="ti ti-key"></i></span><span class="nav-link-title">Auth</span></a></li>
+        </ul>
+        <div class="mt-auto pb-3 px-3">
+          <div class="d-flex align-items-center gap-2 p-2 rounded" style="background:rgba(255,255,255,.05)">
+            <span id="api-dot" style="width:8px;height:8px;border-radius:50%;background:#2fb344;box-shadow:0 0 5px #2fb344;flex-shrink:0"></span>
+            <span class="text-muted small" id="api-status">Checking...</span>
+          </div>
+          <div class="text-muted small mt-2 px-1" id="token-info">Not logged in</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="page-wrapper">
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title" id="top-title">Dashboard</h2>
+            <div class="text-muted mt-1 small" id="top-sub">Welcome to Sweet Crumbs Admin</div>
+          </div>
+          <div class="col-auto ms-auto">
+            <div class="d-flex gap-2 align-items-center">
+              <span class="avatar avatar-sm rounded" style="background:linear-gradient(135deg,#D4793B,#E8956D)" id="top-av">?</span>
+              <span class="text-muted small" id="top-user">Not logged in</span>
+              <button class="btn btn-primary btn-sm" id="btn-login" onclick="go('auth',document.getElementById('nav-auth'))"><i class="ti ti-login me-1"></i>Login</button>
+              <button class="btn btn-danger btn-sm" id="btn-logout" style="display:none" onclick="doLogout()"><i class="ti ti-logout me-1"></i>Logout</button>
+              <a href="/shop" target="_blank" class="btn btn-ghost-secondary btn-sm"><i class="ti ti-external-link me-1"></i>View Shop</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="container-xl">
+
+        <!-- AUTH -->
+        <div class="page" id="page-auth">
+          <div class="row justify-content-center">
+            <div class="col-lg-10">
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header"><h3 class="card-title"><i class="ti ti-user-plus me-2 text-blue"></i>Register</h3></div>
+                    <div class="card-body">
+                      <div class="mb-3"><label class="form-label">Username <span class="text-danger">*</span></label><input class="form-control" id="r-u" placeholder="e.g. baker" type="text"></div>
+                      <div class="mb-3"><label class="form-label">Email</label><input class="form-control" id="r-e" placeholder="baker@sweetcrumbs.com" type="email"></div>
+                      <div class="mb-3"><label class="form-label">Password <span class="text-danger">*</span></label><input class="form-control" id="r-p" placeholder="••••••••" type="password"></div>
+                      <div class="mb-3">
+                        <label class="form-label">Role <span class="text-danger">*</span></label>
+                        <select class="form-select" id="r-role">
+                          <option value="customer">👤 Customer</option>
+                          <option value="admin">🔑 Admin</option>
+                        </select>
+                        <div class="form-hint">Admins can create/edit/delete products, categories and tags.</div>
+                      </div>
+                      <button class="btn btn-primary w-100" onclick="doRegister()"><i class="ti ti-user-plus me-1"></i>Create Account</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header"><h3 class="card-title"><i class="ti ti-login me-2 text-green"></i>Login</h3></div>
+                    <div class="card-body">
+                      <div class="mb-3"><label class="form-label">Username <span class="text-danger">*</span></label><input class="form-control" id="l-u" placeholder="e.g. baker" type="text"></div>
+                      <div class="mb-3"><label class="form-label">Password <span class="text-danger">*</span></label><input class="form-control" id="l-p" placeholder="••••••••" type="password"></div>
+                      <div class="alert alert-warning mb-3"><i class="ti ti-shield-lock me-2"></i>This panel is for <strong>admins only</strong>. Customers will be denied access.</div>
+                      <button class="btn btn-success w-100" onclick="doLogin()"><i class="ti ti-login me-1"></i>Login</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div class="page" id="page-dashboard">
+          <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3"><div class="card cursor-pointer" onclick="go('products',document.getElementById('nav-products'))"><div class="card-body"><div class="subheader">Products</div><div class="h1 mt-2 mb-0" id="st-p">—</div><div class="d-flex mt-3"><span class="text-muted small">Total items</span><span class="avatar bg-orange-lt ms-auto"><i class="ti ti-cake text-orange"></i></span></div></div></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="card cursor-pointer" onclick="go('categories',document.getElementById('nav-categories'))"><div class="card-body"><div class="subheader">Categories</div><div class="h1 mt-2 mb-0" id="st-c">—</div><div class="d-flex mt-3"><span class="text-muted small">Total categories</span><span class="avatar bg-teal-lt ms-auto"><i class="ti ti-category text-teal"></i></span></div></div></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="card cursor-pointer" onclick="go('orders',document.getElementById('nav-orders'))"><div class="card-body"><div class="subheader">Orders</div><div class="h1 mt-2 mb-0" id="st-o">—</div><div class="d-flex mt-3"><span class="text-muted small">All orders</span><span class="avatar bg-blue-lt ms-auto"><i class="ti ti-shopping-cart text-blue"></i></span></div></div></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="card"><div class="card-body"><div class="subheader">Revenue</div><div class="h1 mt-2 mb-0" id="st-rev">—</div><div class="d-flex mt-3"><span class="text-muted small">Total value</span><span class="avatar bg-green-lt ms-auto"><i class="ti ti-currency-euro text-green"></i></span></div></div></div></div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title"><i class="ti ti-cake me-2 text-orange"></i>Recent Products</h3><div class="card-options"><button class="btn btn-sm btn-ghost-secondary" onclick="loadDash()"><i class="ti ti-refresh"></i></button></div></div>
+                <div id="d-products"><div class="empty py-4"><div class="empty-icon"><i class="ti ti-cake"></i></div><p class="empty-title">Loading...</p></div></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title"><i class="ti ti-shopping-cart me-2 text-blue"></i>Recent Orders</h3></div>
+                <div id="d-orders"><div class="empty py-4"><div class="empty-icon"><i class="ti ti-shopping-cart"></i></div><p class="empty-title">Loading...</p></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCTS -->
+        <div class="page" id="page-products">
+          <div class="card mb-4">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-plus me-2 text-orange"></i>Add New Product</h3></div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4"><label class="form-label">Name <span class="text-danger">*</span></label><input class="form-control" id="pn" placeholder="e.g. Chocolate Cake"></div>
+                <div class="col-md-2"><label class="form-label">Price (€) <span class="text-danger">*</span></label><input class="form-control" id="pp" type="number" placeholder="24.99"></div>
+                <div class="col-md-2"><label class="form-label">Stock <span class="text-danger">*</span></label><input class="form-control" id="pq" type="number" placeholder="10"></div>
+                <div class="col-md-4"><label class="form-label">Category</label><select class="form-select" id="pc"><option value="">-- No Category --</option></select></div>
+              </div>
+              <div class="row g-3 mt-0">
+                <div class="col-md-6"><label class="form-label">Description</label><input class="form-control" id="pd" placeholder="Describe your product..."></div>
+                <div class="col-md-3">
+                  <label class="form-label">Product Image</label>
+                  <input class="form-control" id="pimg" type="file" accept="image/*">
+                </div>
+                <div class="col-md-3 d-flex align-items-end"><button class="btn btn-primary w-100" onclick="createProduct()"><i class="ti ti-plus me-1"></i>Create Product</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-cake me-2"></i>All Products</h3><div class="card-options"><button class="btn btn-sm btn-ghost-secondary" onclick="loadProducts()"><i class="ti ti-refresh me-1"></i>Refresh</button></div></div>
+            <div class="table-responsive" id="products-list"><div class="empty py-4"><div class="empty-icon"><i class="ti ti-cake"></i></div><p class="empty-title">No products yet</p></div></div>
+          </div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="page" id="page-categories">
+          <div class="card mb-4">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-plus me-2 text-teal"></i>Add Category</h3></div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4"><label class="form-label">Name <span class="text-danger">*</span></label><input class="form-control" id="cn" placeholder="e.g. Cakes"></div>
+                <div class="col-md-6"><label class="form-label">Description</label><input class="form-control" id="cd" placeholder="optional"></div>
+                <div class="col-md-2 d-flex align-items-end"><button class="btn btn-primary w-100" onclick="createCategory()"><i class="ti ti-plus me-1"></i>Add</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-category me-2"></i>All Categories</h3><div class="card-options"><button class="btn btn-sm btn-ghost-secondary" onclick="loadCategories()"><i class="ti ti-refresh me-1"></i>Refresh</button></div></div>
+            <div class="table-responsive" id="cats-list"><div class="empty py-4"><div class="empty-icon"><i class="ti ti-category"></i></div><p class="empty-title">No categories yet</p></div></div>
+          </div>
+        </div>
+
+        <!-- TAGS -->
+        <div class="page" id="page-tags">
+          <div class="alert alert-info mb-4"><i class="ti ti-info-circle me-2"></i>Tags have a many-to-many relationship with products. One product can have many tags, one tag can label many products.</div>
+          <div class="row g-4 mb-4">
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-header"><h3 class="card-title"><i class="ti ti-tag me-2 text-yellow"></i>Create Tag</h3></div>
+                <div class="card-body">
+                  <div class="mb-3"><label class="form-label">Tag Name <span class="text-danger">*</span></label><input class="form-control" id="tn" placeholder="e.g. bestseller"></div>
+                  <button class="btn btn-primary w-100" onclick="createTag()"><i class="ti ti-plus me-1"></i>Create Tag</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-header"><h3 class="card-title"><i class="ti ti-link me-2 text-green"></i>Link Tag to Product</h3></div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="form-label">Select Product <span class="text-danger">*</span></label>
+                    <select class="form-select" id="tlp">
+                      <option value="">-- Select Product --</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Select Tag <span class="text-danger">*</span></label>
+                    <select class="form-select" id="tlt">
+                      <option value="">-- Select Tag --</option>
+                    </select>
+                  </div>
+                  <div class="row g-2">
+                    <div class="col-6"><button class="btn btn-success w-100" onclick="linkTag()"><i class="ti ti-link me-1"></i>Link</button></div>
+                    <div class="col-6"><button class="btn btn-danger w-100" onclick="unlinkTag()"><i class="ti ti-unlink me-1"></i>Unlink</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100">
+                <div class="card-header"><h3 class="card-title"><i class="ti ti-eye me-2 text-blue"></i>View Product Tags</h3></div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="form-label">Select Product</label>
+                    <select class="form-select" id="tvp">
+                      <option value="">-- Select Product --</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-info text-white w-100" onclick="viewProductTags()"><i class="ti ti-search me-1"></i>Get Tags</button>
+                  <div class="mt-3" id="ptags-res"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-tags me-2"></i>All Tags</h3><div class="card-options"><button class="btn btn-sm btn-ghost-secondary" onclick="loadTags()"><i class="ti ti-refresh me-1"></i>Refresh</button></div></div>
+            <div class="table-responsive" id="tags-list"><div class="empty py-4"><div class="empty-icon"><i class="ti ti-tag"></i></div><p class="empty-title">No tags yet</p></div></div>
+          </div>
+        </div>
+
+        <!-- ORDERS -->
+        <div class="page" id="page-orders">
+          <div class="card mb-4">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-pencil me-2 text-blue"></i>Update Order Status</h3></div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-3"><label class="form-label">Order ID <span class="text-danger">*</span></label><input class="form-control" id="upd-id" type="number" placeholder="e.g. 1"></div>
+                <div class="col-md-5"><label class="form-label">New Status</label>
+                  <select class="form-select" id="upd-status">
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="preparing">Preparing</option>
+                    <option value="ready">Ready for Pickup</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end"><button class="btn btn-primary w-100" onclick="updateOrderStatus()"><i class="ti ti-check me-1"></i>Update Status</button></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-list me-2"></i>All Orders</h3><div class="card-options"><button class="btn btn-sm btn-ghost-secondary" onclick="loadOrders()"><i class="ti ti-refresh me-1"></i>Refresh</button></div></div>
+            <div class="table-responsive" id="orders-list"><div class="empty py-4"><div class="empty-icon"><i class="ti ti-shopping-cart"></i></div><p class="empty-title">No orders yet</p></div></div>
+          </div>
+        </div>
+
+        <!-- REVIEWS -->
+        <div class="page" id="page-reviews">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-star me-2 text-yellow"></i>All Reviews</h3><div class="card-options"><button class="btn btn-sm btn-ghost-secondary" onclick="loadAllReviews()"><i class="ti ti-refresh me-1"></i>Refresh</button></div></div>
+            <div class="table-responsive" id="reviews-list"><div class="empty py-4"><div class="empty-icon"><i class="ti ti-star"></i></div><p class="empty-title">No reviews yet</p></div></div>
+          </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="page" id="page-stats">
+          <div class="row g-3 mb-4" id="stats-cards">
+            <div class="col-sm-6 col-lg-3"><div class="card"><div class="card-body"><div class="subheader">Total Orders</div><div class="h1 mt-2 mb-0" id="s-orders">—</div><div class="d-flex mt-3"><span class="text-muted small">All time</span><span class="avatar bg-blue-lt ms-auto"><i class="ti ti-shopping-cart text-blue"></i></span></div></div></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="card"><div class="card-body"><div class="subheader">Total Revenue</div><div class="h1 mt-2 mb-0" id="s-revenue">—</div><div class="d-flex mt-3"><span class="text-muted small">Excl. cancelled</span><span class="avatar bg-green-lt ms-auto"><i class="ti ti-currency-euro text-green"></i></span></div></div></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="card"><div class="card-body"><div class="subheader">Avg Order Value</div><div class="h1 mt-2 mb-0" id="s-avg">—</div><div class="d-flex mt-3"><span class="text-muted small">Per order</span><span class="avatar bg-orange-lt ms-auto"><i class="ti ti-trending-up text-orange"></i></span></div></div></div></div>
+            <div class="col-sm-6 col-lg-3"><div class="card"><div class="card-body"><div class="subheader">Pending Orders</div><div class="h1 mt-2 mb-0" id="s-pending">—</div><div class="d-flex mt-3"><span class="text-muted small">Need attention</span><span class="avatar bg-yellow-lt ms-auto"><i class="ti ti-clock text-yellow"></i></span></div></div></div></div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title"><i class="ti ti-chart-pie me-2 text-blue"></i>Orders by Status</h3><div class="card-options"><button class="btn btn-sm btn-ghost-secondary" onclick="loadStats()"><i class="ti ti-refresh"></i></button></div></div>
+                <div class="card-body" id="s-status-chart"></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title"><i class="ti ti-trophy me-2 text-yellow"></i>Top Products by Orders</h3></div>
+                <div class="table-responsive" id="s-top-products"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-3 mt-0">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title"><i class="ti ti-search me-2 text-purple"></i>Product Search</h3></div>
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-md-4"><label class="form-label">Search by Name</label><input class="form-control" id="admin-search-q" placeholder="e.g. chocolate" oninput="adminSearch()"></div>
+                    <div class="col-md-2"><label class="form-label">Min Price (€)</label><input class="form-control" id="admin-min" type="number" placeholder="0" oninput="adminSearch()"></div>
+                    <div class="col-md-2"><label class="form-label">Max Price (€)</label><input class="form-control" id="admin-max" type="number" placeholder="100" oninput="adminSearch()"></div>
+                    <div class="col-md-2 d-flex align-items-end"><button class="btn btn-warning w-100" onclick="adminFeatured()"><i class="ti ti-star me-1"></i>Featured</button></div>
+                    <div class="col-md-2 d-flex align-items-end"><button class="btn btn-ghost-secondary w-100" onclick="adminSearchClear()"><i class="ti ti-x me-1"></i>Clear</button></div>
+                  </div>
+                </div>
+                <div class="table-responsive" id="admin-search-results"><div class="empty py-3"><p class="empty-title text-muted small">Enter search term above</p></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- USERS -->
+        <div class="page" id="page-users">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title"><i class="ti ti-users me-2"></i>All Users</h3><div class="card-options"><button class="btn btn-sm btn-ghost-secondary" onclick="loadUsers()"><i class="ti ti-refresh me-1"></i>Refresh</button></div></div>
+            <div class="table-responsive" id="users-list"><div class="empty py-4"><div class="empty-icon"><i class="ti ti-users"></i></div><p class="empty-title">Login first</p></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <footer class="footer footer-transparent d-print-none">
+      <div class="container-xl"><div class="row text-center"><div class="col"><ul class="list-inline list-inline-dots mb-0 text-muted"><li class="list-inline-item">Sweet Crumbs Bakery Admin</li><li class="list-inline-item">Flask + SQLAlchemy + JWT</li></ul></div></div></div>
+    </footer>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta17/dist/js/tabler.min.js"></script>
+<script>
+const BASE='http://localhost:5000';
+let token=null,me=null;
+
+const pageMeta={
+  auth:{title:'Auth',sub:'Login to manage your bakery'},
+  stats:{title:'Stats & Search',sub:'Revenue analytics and product search'},
+  dashboard:{title:'Dashboard',sub:'Sweet Crumbs Bakery overview'},
+  products:{title:'Products',sub:'Manage your bakery products'},
+  categories:{title:'Categories',sub:'Organise products into categories'},
+  tags:{title:'Tags',sub:'Label products with tags (many-to-many)'},
+  orders:{title:'Orders',sub:'Track and manage customer orders'},
+  reviews:{title:'Reviews',sub:'Customer product reviews'},
+  users:{title:'Users',sub:'Manage system users'},
+};
+
+function go(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const m=pageMeta[name]||{title:name,sub:''};
+  document.getElementById('top-title').textContent=m.title;
+  document.getElementById('top-sub').textContent=m.sub;
+  if(name==='dashboard') loadDash();
+  if(name==='products'){loadProducts();populateCatDropdowns();}
+  if(name==='categories') loadCategories();
+  if(name==='tags'){loadTags();populateTagLinkDropdowns();}
+  if(name==='orders') loadOrders();
+  if(name==='reviews') loadAllReviews();
+  if(name==='users') loadUsers();
+  if(name==='stats') loadStats();
+}
+
+function hdr(){const h={'Content-Type':'application/json'};if(token)h['Authorization']='Bearer '+token;return h;}
+function money(v){return '€'+Number(v).toFixed(2);}
+function stars(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
+
+function toast(msg,type='success'){
+  const c=document.getElementById('toasts');
+  const t=document.createElement('div');
+  const colors={success:'bg-success',error:'bg-danger',info:'bg-info',warning:'bg-warning'};
+  const icons={success:'ti-circle-check',error:'ti-circle-x',info:'ti-info-circle',warning:'ti-alert-triangle'};
+  t.className=`alert ${colors[type]} alert-dismissible text-white shadow`;
+  t.innerHTML=`<i class="ti ${icons[type]} me-2"></i>${msg}<button type="button" class="btn-close btn-close-white" onclick="this.parentElement.remove()"></button>`;
+  c.appendChild(t);setTimeout(()=>t?.remove(),4000);
+}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+function updateBadges(){
+  fetch(BASE+'/products',{headers:hdr()}).then(r=>r.json()).then(d=>{document.getElementById('nb-products').textContent=d.length;document.getElementById('st-p').textContent=d.length;}).catch(()=>{});
+  fetch(BASE+'/categories',{headers:hdr()}).then(r=>r.json()).then(d=>{document.getElementById('nb-cats').textContent=d.length;document.getElementById('st-c').textContent=d.length;}).catch(()=>{});
+  fetch(BASE+'/tags',{headers:hdr()}).then(r=>r.json()).then(d=>{document.getElementById('nb-tags').textContent=d.length;}).catch(()=>{});
+  if(token){fetch(BASE+'/orders/stats',{headers:hdr()}).then(r=>r.ok?r.json():null).then(d=>{if(d){document.getElementById('s-orders').textContent=d.total_orders;document.getElementById('s-revenue').textContent=money(d.total_revenue);}}).catch(()=>{});fetch(BASE+'/orders',{headers:hdr()}).then(r=>r.json()).then(d=>{
+    document.getElementById('nb-orders').textContent=d.length;
+    document.getElementById('st-o').textContent=d.length;
+    const rev=d.reduce((s,o)=>s+o.total_price,0);
+    document.getElementById('st-rev').textContent=money(rev);
+  }).catch(()=>{});}
+}
+
+async function checkAPI(){
+  try{await fetch(BASE+'/products');document.getElementById('api-dot').style.cssText='width:8px;height:8px;border-radius:50%;background:#2fb344;box-shadow:0 0 5px #2fb344;flex-shrink:0';document.getElementById('api-status').textContent='API Online';}
+  catch(e){document.getElementById('api-dot').style.cssText='width:8px;height:8px;border-radius:50%;background:#d63939;box-shadow:0 0 5px #d63939;flex-shrink:0';document.getElementById('api-status').textContent='API Offline';}
+}
+
+function updateUI(){
+  document.getElementById('top-user').textContent=me||'Not logged in';
+  document.getElementById('top-av').textContent=me?me[0].toUpperCase():'?';
+  document.getElementById('token-info').textContent=token?`Logged in as ${me}`:'Not logged in';
+}
+
+async function doRegister(){
+  const u=document.getElementById('r-u').value.trim(),p=document.getElementById('r-p').value.trim(),e=document.getElementById('r-e').value.trim();
+  if(!u||!p){toast('Username and password required.','error');return;}
+  if(p.length<4){toast('Password must be at least 4 chars.','error');return;}
+  const role=document.getElementById('r-role').value;
+  try{const r=await fetch(BASE+'/register',{method:'POST',headers:hdr(),body:JSON.stringify({username:u,password:p,email:e||undefined,role:role})});const d=await r.json();if(r.ok){toast(`Account created as ${role}! Please login.`);document.getElementById('r-u').value='';document.getElementById('r-p').value='';document.getElementById('r-e').value='';document.getElementById('r-role').value='customer';}else toast(d.message||'Failed.','error');}catch(e){toast('Cannot connect to API.','error');}
+}
+
+async function doLogin(){
+  const u=document.getElementById('l-u').value.trim(),p=document.getElementById('l-p').value.trim();
+  if(!u||!p){toast('Please fill in all fields.','error');return;}
+  try{
+    const r=await fetch(BASE+'/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    const d=await r.json();
+    if(r.ok){
+      const role=d.user?.role||'customer';
+      if(role !== 'admin'){
+        toast('Access denied! Only admins can access this panel.','error');
+        // Still store token for reference but lock the UI
+        return;
+      }
+      token=d.access_token;me=u;updateUI();
+      document.getElementById('btn-login').style.display='none';
+      document.getElementById('btn-logout').style.display='';
+      document.querySelectorAll('.nav-link').forEach(el=>el.style.display='');
+      document.getElementById('nav-stats').style.display='';
+      toast(`Welcome, Admin ${me}! 🎂`);
+      go('dashboard',document.getElementById('nav-dashboard'));
+      updateBadges();populateCatDropdowns();
+    }else toast(d.message||'Invalid credentials.','error');
+  }catch(e){toast('Cannot connect to API.','error');}
+}
+
+async function doLogout(){
+  try{await fetch(BASE+'/logout',{method:'POST',headers:hdr()});}catch(e){}
+  window.location.reload();
+}
+
+function statusBadge(s){
+  const m={pending:'bg-yellow-lt text-yellow',confirmed:'bg-blue-lt text-blue',preparing:'bg-purple-lt text-purple',ready:'bg-teal-lt text-teal',delivered:'bg-green-lt text-green',cancelled:'bg-red-lt text-red'};
+  return `<span class="badge ${m[s]||'bg-secondary'}">${s}</span>`;
+}
+
+async function populateCatDropdowns(){
+  try{const r=await fetch(BASE+'/categories',{headers:hdr()});const cats=r.ok?await r.json():[];
+    const opts='<option value="">-- No Category --</option>'+cats.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+    ['pc','ep-cat'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts;});
+  }catch(e){}
+}
+
+async function loadDash(){
+  try{
+    const[pr,cr,or]=await Promise.all([fetch(BASE+'/products',{headers:hdr()}),fetch(BASE+'/categories',{headers:hdr()}),token?fetch(BASE+'/orders',{headers:hdr()}):Promise.resolve({ok:false})]);
+    const products=pr.ok?await pr.json():[];
+    const orders=or.ok?await or.json():[];
+    document.getElementById('st-p').textContent=products.length;
+    document.getElementById('st-c').textContent=(cr.ok?await cr.json():[]).length;
+    document.getElementById('st-o').textContent=orders.length;
+    document.getElementById('st-rev').textContent=money(orders.reduce((s,o)=>s+o.total_price,0));
+
+    document.getElementById('d-products').innerHTML=products.length===0
+      ?'<div class="empty py-4"><div class="empty-icon"><i class="ti ti-cake"></i></div><p class="empty-title">No products yet</p></div>'
+      :'<table class="table table-vcenter card-table"><tbody>'+products.slice(0,5).map(p=>`<tr><td class="w-1"><span class="avatar avatar-sm bg-orange-lt"><i class="ti ti-cake text-orange"></i></span></td><td><div class="fw-medium">${p.name}</div><div class="text-muted small">${p.category?.name||'Uncategorized'}</div></td><td class="text-end"><span class="badge bg-green-lt text-green">${money(p.price)}</span></td><td class="text-end"><span class="badge ${p.stock_quantity>0?'bg-teal-lt text-teal':'bg-red-lt text-red'}">${p.stock_quantity} stock</span></td></tr>`).join('')+'</tbody></table>';
+
+    document.getElementById('d-orders').innerHTML=orders.length===0
+      ?'<div class="empty py-4"><div class="empty-icon"><i class="ti ti-shopping-cart"></i></div><p class="empty-title">No orders yet</p></div>'
+      :'<table class="table table-vcenter card-table"><tbody>'+orders.slice(0,5).map(o=>`<tr><td><span class="fw-medium">#${o.id}</span></td><td>${statusBadge(o.status)}</td><td class="text-muted small">${(o.order_items||[]).length} items</td><td class="text-end"><span class="badge bg-green-lt text-green">${money(o.total_price)}</span></td></tr>`).join('')+'</tbody></table>';
+  }catch(e){}
+}
+
+async function loadProducts(){
+  try{
+    const r=await fetch(BASE+'/products',{headers:hdr()});const data=await r.json();
+    const el=document.getElementById('products-list');
+    if(!data.length){el.innerHTML='<div class="empty py-4"><div class="empty-icon"><i class="ti ti-cake"></i></div><p class="empty-title">No products yet</p></div>';return;}
+    el.innerHTML='<table class="table table-vcenter table-hover card-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Tags</th><th>Available</th><th class="w-1">Actions</th></tr></thead><tbody>'+
+      data.map(p=>`<tr>
+        <td><div class="d-flex align-items-center gap-2">
+        ${p.image_url?`<img src="${BASE}${p.image_url}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;border:1px solid #eee">`:`<div style="width:40px;height:40px;border-radius:6px;background:linear-gradient(135deg,#FDE8D8,#F5D5C0);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🎂</div>`}
+        <div><div class="fw-medium">${p.name}</div><div class="text-muted small">${p.description?p.description.substring(0,40)+'...':''}</div></div>
+      </div></td>
+        <td>${p.category?`<span class="badge bg-teal-lt text-teal">${p.category.name}</span>`:'<span class="text-muted">—</span>'}</td>
+        <td><span class="badge bg-green-lt text-green fw-medium">${money(p.price)}</span></td>
+        <td><span class="badge ${p.stock_quantity>5?'bg-teal-lt text-teal':p.stock_quantity>0?'bg-yellow-lt text-yellow':'bg-red-lt text-red'}">${p.stock_quantity}</span></td>
+        <td>${(p.tags||[]).map(t=>`<span class="tag-badge">${t.name}</span>`).join('')||'—'}</td>
+        <td>${p.is_available?'<span class="badge bg-green-lt text-green">Yes</span>':'<span class="badge bg-red-lt text-red">No</span>'}</td>
+        <td><div class="d-flex gap-1">
+          <button class="btn btn-sm btn-ghost-secondary" onclick='openEditProduct(${JSON.stringify(p).replace(/'/g,"&#39;")})'><i class="ti ti-pencil"></i></button>
+          <button class="btn btn-sm btn-ghost-danger" onclick="delProduct(${p.id})"><i class="ti ti-trash"></i></button>
+        </div></td>
+      </tr>`).join('')+'</tbody></table>';
+  }catch(e){document.getElementById('products-list').innerHTML='<div class="empty py-4"><p class="text-danger">API offline</p></div>';}
+}
+
+async function createProduct(){
+  const name=document.getElementById('pn').value.trim(),price=document.getElementById('pp').value.trim(),stock=document.getElementById('pq').value.trim(),cat=document.getElementById('pc').value,desc=document.getElementById('pd').value.trim();
+  if(!name){toast('Product name required.','error');return;}
+  if(!price||parseFloat(price)<=0){toast('Valid price required.','error');return;}
+  if(!stock||parseInt(stock)<0){toast('Valid stock required.','error');return;}
+  try{
+    // Upload image first if provided
+    const imgFile=document.getElementById('pimg');
+    let image_url=null;
+    if(imgFile.files[0]){
+      toast('Uploading image...','info');
+      image_url=await uploadImage(imgFile);
+    }
+    const body={name,price:parseFloat(price),stock_quantity:parseInt(stock)};
+    if(desc) body.description=desc;
+    if(cat) body.category_id=parseInt(cat);
+    if(image_url) body.image_url=image_url;
+    const r=await fetch(BASE+'/products',{method:'POST',headers:hdr(),body:JSON.stringify(body)});
+    const d=await r.json();
+    if(r.ok){toast(`"${d.name}" created!`);['pn','pp','pq','pd'].forEach(id=>document.getElementById(id).value='');document.getElementById('pc').value='';document.getElementById('pimg').value='';loadProducts();updateBadges();}
+    else toast(d.message||'Failed.','error');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+function openEditProduct(p){
+  document.getElementById('ep-id').value=p.id;
+  document.getElementById('ep-name').value=p.name;
+  document.getElementById('ep-desc').value=p.description||'';
+  document.getElementById('ep-price').value=p.price;
+  document.getElementById('ep-stock').value=p.stock_quantity;
+  document.getElementById('ep-avail').value=String(p.is_available);
+  document.getElementById('ep-img').value='';
+  // Show current image if exists
+  const imgDiv=document.getElementById('ep-current-img');
+  const imgPreview=document.getElementById('ep-img-preview');
+  if(p.image_url){
+    imgPreview.src=BASE+p.image_url;
+    imgDiv.style.display='block';
+    imgDiv.dataset.url=p.image_url;
+  }else{
+    imgDiv.style.display='none';
+    imgDiv.dataset.url='';
+  }
+  populateCatDropdowns().then(()=>{document.getElementById('ep-cat').value=p.category_id||'';});
+  openModal('modal-product');
+}
+
+function removeProductImage(){
+  document.getElementById('ep-current-img').style.display='none';
+  document.getElementById('ep-current-img').dataset.url='';
+  document.getElementById('ep-img-preview').src='';
+}
+
+async function saveProduct(){
+  const id=document.getElementById('ep-id').value;
+  const body={name:document.getElementById('ep-name').value.trim(),description:document.getElementById('ep-desc').value.trim()||undefined,price:parseFloat(document.getElementById('ep-price').value),stock_quantity:parseInt(document.getElementById('ep-stock').value),is_available:document.getElementById('ep-avail').value==='true'};
+  const cat=document.getElementById('ep-cat').value;if(cat) body.category_id=parseInt(cat);
+  // Handle image
+  const imgFile=document.getElementById('ep-img');
+  const currentImgDiv=document.getElementById('ep-current-img');
+  if(imgFile.files[0]){
+    toast('Uploading image...','info');
+    const url=await uploadImage(imgFile);
+    if(url) body.image_url=url;
+  } else if(currentImgDiv.dataset.url){
+    body.image_url=currentImgDiv.dataset.url;
+  } else {
+    body.image_url=null;
+  }
+  try{const r=await fetch(BASE+'/products/'+id,{method:'PUT',headers:hdr(),body:JSON.stringify(body)});const d=await r.json();if(r.ok){toast(`"${d.name}" updated!`);closeModal('modal-product');loadProducts();updateBadges();}else toast(d.message||'Failed.','error');}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function delProduct(id){if(!confirm('Delete this product?'))return;try{const r=await fetch(BASE+'/products/'+id,{method:'DELETE',headers:hdr()});if(r.ok){toast('Product deleted.','info');loadProducts();updateBadges();}else{const d=await r.json();toast(d.message,'error');}}catch(e){}}
+
+async function loadCategories(){
+  try{const r=await fetch(BASE+'/categories',{headers:hdr()});const data=await r.json();const el=document.getElementById('cats-list');
+    if(!data.length){el.innerHTML='<div class="empty py-4"><div class="empty-icon"><i class="ti ti-category"></i></div><p class="empty-title">No categories yet</p></div>';return;}
+    el.innerHTML='<table class="table table-vcenter table-hover card-table"><thead><tr><th>ID</th><th>Name</th><th>Description</th><th>Products</th><th class="w-1">Actions</th></tr></thead><tbody>'+
+      data.map(c=>`<tr><td class="text-muted">#${c.id}</td><td class="fw-medium">${c.name}</td><td class="text-muted">${c.description||'—'}</td><td><span class="badge bg-teal-lt text-teal">${(c.products||[]).length} products</span></td><td><div class="d-flex gap-1"><button class="btn btn-sm btn-ghost-secondary" onclick="openEditCat(${c.id},'${c.name.replace(/'/g,"\\'")}','${(c.description||'').replace(/'/g,"\\'")}')"><i class="ti ti-pencil"></i></button><button class="btn btn-sm btn-ghost-danger" onclick="delCat(${c.id})"><i class="ti ti-trash"></i></button></div></td></tr>`).join('')+'</tbody></table>';
+  }catch(e){}}
+
+async function createCategory(){
+  const name=document.getElementById('cn').value.trim(),desc=document.getElementById('cd').value.trim();
+  if(!name){toast('Category name required.','error');return;}
+  try{const r=await fetch(BASE+'/categories',{method:'POST',headers:hdr(),body:JSON.stringify({name,description:desc||undefined})});const d=await r.json();if(r.ok){toast(`"${d.name}" created!`);document.getElementById('cn').value='';document.getElementById('cd').value='';loadCategories();updateBadges();populateCatDropdowns();}else toast(d.message||'Failed.','error');}catch(e){toast('Error.','error');}
+}
+
+function openEditCat(id,name,desc){document.getElementById('ec-id').value=id;document.getElementById('ec-name').value=name;document.getElementById('ec-desc').value=desc;openModal('modal-cat');}
+async function saveCat(){const id=document.getElementById('ec-id').value,name=document.getElementById('ec-name').value.trim(),desc=document.getElementById('ec-desc').value.trim();if(!name){toast('Name required.','error');return;}try{const r=await fetch(BASE+'/categories/'+id,{method:'PUT',headers:hdr(),body:JSON.stringify({name,description:desc||undefined})});const d=await r.json();if(r.ok){toast(`"${d.name}" updated!`);closeModal('modal-cat');loadCategories();updateBadges();populateCatDropdowns();}else toast(d.message||'Failed.','error');}catch(e){}}
+async function delCat(id){if(!confirm('Delete?'))return;try{const r=await fetch(BASE+'/categories/'+id,{method:'DELETE',headers:hdr()});if(r.ok){toast('Deleted.','info');loadCategories();updateBadges();populateCatDropdowns();}else{const d=await r.json();toast(d.message,'error');}}catch(e){}}
+
+async function uploadImage(fileInput){
+  const file = fileInput.files[0];
+  if(!file) return null;
+  const formData = new FormData();
+  formData.append('image', file);
+  try{
+    const r = await fetch(BASE+'/upload', {
+      method: 'POST',
+      headers: {'Authorization': 'Bearer '+token},
+      body: formData
+    });
+    const d = await r.json();
+    if(r.ok) return d.image_url;
+    toast(d.message||'Image upload failed.','error');
+    return null;
+  }catch(e){ toast('Image upload error.','error'); return null; }
+}
+
+async function uploadImage(fileInput){
+  const file=fileInput.files[0];
+  if(!file) return null;
+  const fd=new FormData();
+  fd.append('image',file);
+  try{
+    const r=await fetch(BASE+'/upload',{method:'POST',headers:{'Authorization':'Bearer '+token},body:fd});
+    const d=await r.json();
+    if(r.ok) return d.image_url;
+    toast(d.message||'Upload failed.','error');return null;
+  }catch(e){toast('Upload error.','error');return null;}
+}
+
+async function populateTagLinkDropdowns(){
+  try{
+    const[pr,tr]=await Promise.all([
+      fetch(BASE+'/products',{headers:hdr()}),
+      fetch(BASE+'/tags',{headers:hdr()})
+    ]);
+    const products=pr.ok?await pr.json():[];
+    const tags=tr.ok?await tr.json():[];
+
+    // Populate product dropdowns (tlp and tvp)
+    const productOpts='<option value="">-- Select Product --</option>'+
+      products.map(p=>`<option value="${p.id}">#${p.id} — ${p.name}</option>`).join('');
+    ['tlp','tvp'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.innerHTML=productOpts;
+    });
+
+    // Populate tag dropdown (tlt)
+    const tagOpts='<option value="">-- Select Tag --</option>'+
+      tags.map(t=>`<option value="${t.id}">#${t.id} — ${t.name}</option>`).join('');
+    const tlt=document.getElementById('tlt');
+    if(tlt) tlt.innerHTML=tagOpts;
+  }catch(e){}
+}
+
+async function loadTags(){
+  try{const r=await fetch(BASE+'/tags',{headers:hdr()});const data=await r.json();const el=document.getElementById('tags-list');
+    if(!data.length){el.innerHTML='<div class="empty py-4"><div class="empty-icon"><i class="ti ti-tag"></i></div><p class="empty-title">No tags yet</p></div>';return;}
+    el.innerHTML='<table class="table table-vcenter table-hover card-table"><thead><tr><th>ID</th><th>Name</th><th>Linked Products</th><th class="w-1">Action</th></tr></thead><tbody>'+
+      data.map(t=>`<tr><td class="text-muted">#${t.id}</td><td><span class="tag-badge">${t.name}</span></td><td>${(t.products||[]).map(p=>`<span class="badge bg-orange-lt text-orange me-1">${p.name}</span>`).join('')||'<span class="text-muted">none</span>'}</td><td><button class="btn btn-sm btn-ghost-danger" onclick="delTag(${t.id})"><i class="ti ti-trash"></i></button></td></tr>`).join('')+'</tbody></table>';
+  }catch(e){}
+}
+
+async function createTag(){const name=document.getElementById('tn').value.trim();if(!name){toast('Tag name required.','error');return;}try{const r=await fetch(BASE+'/tags',{method:'POST',headers:hdr(),body:JSON.stringify({name})});const d=await r.json();if(r.ok){toast(`Tag "${d.name}" created! ID:${d.id}`);document.getElementById('tn').value='';loadTags();updateBadges();populateTagLinkDropdowns();}else toast(d.message||'Failed.','error');}catch(e){}}
+async function delTag(id){try{const r=await fetch(BASE+'/tags/'+id,{method:'DELETE',headers:hdr()});const d=await r.json();if(r.ok){toast('Tag deleted.','info');loadTags();updateBadges();}else toast(d.message,'error');}catch(e){}}
+
+async function linkTag(){const pid=document.getElementById('tlp').value.trim(),tid=document.getElementById('tlt').value.trim();if(!pid||!tid){toast('Enter both IDs.','error');return;}try{const r=await fetch(`${BASE}/products/${pid}/tags/${tid}`,{method:'POST',headers:hdr()});const d=await r.json();if(r.ok){toast('Tag linked!');loadTags();populateTagLinkDropdowns();}else toast(d.message||'Failed.','error');}catch(e){}}
+async function unlinkTag(){const pid=document.getElementById('tlp').value.trim(),tid=document.getElementById('tlt').value.trim();if(!pid||!tid){toast('Enter both IDs.','error');return;}try{const r=await fetch(`${BASE}/products/${pid}/tags/${tid}`,{method:'DELETE',headers:hdr()});const d=await r.json();if(r.ok){toast('Tag unlinked.','info');loadTags();populateTagLinkDropdowns();}else toast(d.message||'Failed.','error');}catch(e){}}
+async function viewProductTags(){const pid=document.getElementById('tvp').value.trim();if(!pid){toast('Enter Product ID.','error');return;}try{const r=await fetch(`${BASE}/products/${pid}/tags`,{headers:hdr()});const d=await r.json();const el=document.getElementById('ptags-res');if(r.ok){el.innerHTML=(d.tags||[]).length===0?'<p class="text-muted small mb-0">No tags.</p>':'<div class="d-flex flex-wrap gap-1">'+((d.tags||[]).map(t=>`<span class="tag-badge">${t.name}</span>`).join(''))+'</div>';}else el.innerHTML=`<p class="text-danger small mb-0">${d.message||'Not found.'}</p>`;}catch(e){}}
+
+async function loadOrders(){
+  const el=document.getElementById('orders-list');
+  if(!token){el.innerHTML='<div class="empty py-4"><p class="empty-title">Login first</p></div>';return;}
+  try{const r=await fetch(BASE+'/orders',{headers:hdr()});const data=await r.json();
+    if(!data.length){el.innerHTML='<div class="empty py-4"><div class="empty-icon"><i class="ti ti-shopping-cart"></i></div><p class="empty-title">No orders yet</p></div>';return;}
+    el.innerHTML='<table class="table table-vcenter table-hover card-table"><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Note</th><th>Date</th><th class="w-1">Action</th></tr></thead><tbody>'+
+      data.map(o=>`<tr><td class="fw-medium">#${o.id}</td><td class="text-muted">${o.user?.username||'—'}</td><td>${(o.order_items||[]).map(oi=>`${oi.product?.name||'?'} ×${oi.quantity}`).join(', ')}</td><td><span class="badge bg-green-lt text-green">${money(o.total_price)}</span></td><td>${statusBadge(o.status)}</td><td class="text-muted small">${o.note||'—'}</td><td class="text-muted small">${new Date(o.created_at).toLocaleDateString()}</td><td><button class="btn btn-sm btn-ghost-danger" onclick="cancelOrder(${o.id})"><i class="ti ti-x"></i></button></td></tr>`).join('')+'</tbody></table>';
+  }catch(e){el.innerHTML='<div class="empty py-4"><p class="text-danger">API offline</p></div>';}
+}
+
+async function updateOrderStatus(){const id=document.getElementById('upd-id').value.trim(),status=document.getElementById('upd-status').value;if(!id){toast('Enter Order ID.','error');return;}try{const r=await fetch(`${BASE}/orders/${id}/status`,{method:'PATCH',headers:hdr(),body:JSON.stringify({status})});const d=await r.json();if(r.ok){toast(`Order #${id} → ${status}`);loadOrders();updateBadges();}else toast(d.message||'Failed.','error');}catch(e){}}
+async function cancelOrder(id){if(!confirm('Cancel order?'))return;try{const r=await fetch(BASE+'/orders/'+id,{method:'DELETE',headers:hdr()});const d=await r.json();if(r.ok){toast('Order cancelled.','info');loadOrders();updateBadges();}else toast(d.message||'Failed.','error');}catch(e){}}
+
+async function loadAllReviews(){
+  const el=document.getElementById('reviews-list');
+  try{
+    const pr=await fetch(BASE+'/products',{headers:hdr()});
+    const products=pr.ok?await pr.json():[];
+    let allReviews=[];
+    for(const p of products){
+      const rr=await fetch(`${BASE}/products/${p.id}/reviews`,{headers:hdr()});
+      const reviews=rr.ok?await rr.json():[];
+      reviews.forEach(r=>r.product_name=p.name);
+      allReviews=[...allReviews,...reviews];
+    }
+    if(!allReviews.length){el.innerHTML='<div class="empty py-4"><div class="empty-icon"><i class="ti ti-star"></i></div><p class="empty-title">No reviews yet</p></div>';return;}
+    el.innerHTML='<table class="table table-vcenter table-hover card-table"><thead><tr><th>Product</th><th>User</th><th>Rating</th><th>Comment</th><th>Date</th><th class="w-1">Action</th></tr></thead><tbody>'+
+      allReviews.map(r=>`<tr><td><span class="badge bg-orange-lt text-orange">${r.product_name}</span></td><td class="text-muted">${r.user?.username||'—'}</td><td><span class="stars text-warning">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span></td><td class="text-muted small">${r.comment||'—'}</td><td class="text-muted small">${new Date(r.created_at).toLocaleDateString()}</td><td><button class="btn btn-sm btn-ghost-danger" onclick="delReview(${r.id})"><i class="ti ti-trash"></i></button></td></tr>`).join('')+'</tbody></table>';
+  }catch(e){el.innerHTML='<div class="empty py-4"><p class="text-danger">API offline</p></div>';}
+}
+
+async function delReview(id){try{const r=await fetch(BASE+'/reviews/'+id,{method:'DELETE',headers:hdr()});const d=await r.json();if(r.ok){toast('Review deleted.','info');loadAllReviews();}else toast(d.message||'Failed.','error');}catch(e){}}
+
+async function loadStats(){
+  if(!token){document.getElementById('s-orders').textContent='Login first';return;}
+  try{
+    const r=await fetch(BASE+'/orders/stats',{headers:hdr()});
+    if(!r.ok){document.getElementById('s-orders').textContent='No data';return;}
+    const d=await r.json();
+    document.getElementById('s-orders').textContent=d.total_orders;
+    document.getElementById('s-revenue').textContent=money(d.total_revenue);
+    document.getElementById('s-avg').textContent=money(d.average_order_value);
+    document.getElementById('s-pending').textContent=d.orders_by_status['pending']||0;
+
+    // Status chart
+    const statusEl=document.getElementById('s-status-chart');
+    const colors={pending:'bg-yellow-lt text-yellow',confirmed:'bg-blue-lt text-blue',preparing:'bg-purple-lt text-purple',ready:'bg-teal-lt text-teal',delivered:'bg-green-lt text-green',cancelled:'bg-red-lt text-red'};
+    statusEl.innerHTML=Object.entries(d.orders_by_status).map(([status,count])=>`
+      <div class="d-flex align-items-center mb-3">
+        <span class="badge ${colors[status]||'bg-secondary'} me-3" style="min-width:90px;text-align:center">${status}</span>
+        <div class="progress flex-fill" style="height:12px">
+          <div class="progress-bar bg-primary" style="width:${Math.round((count/d.total_orders)*100)}%"></div>
+        </div>
+        <span class="ms-3 fw-bold" style="min-width:30px;text-align:right">${count}</span>
+      </div>`).join('');
+
+    // Top products table
+    const topEl=document.getElementById('s-top-products');
+    if(!d.top_products.length){topEl.innerHTML='<div class="empty py-3"><p class="empty-title">No orders yet</p></div>';return;}
+    topEl.innerHTML='<table class="table table-vcenter card-table"><thead><tr><th>Rank</th><th>Product</th><th>Units Sold</th><th>Revenue</th></tr></thead><tbody>'+
+      d.top_products.map((p,i)=>`<tr>
+        <td><span class="badge ${i===0?'bg-yellow text-white':i===1?'bg-secondary text-white':i===2?'bg-orange-lt text-orange':'bg-light text-muted'}">#${i+1}</span></td>
+        <td class="fw-medium">${p.product_name}</td>
+        <td><span class="badge bg-blue-lt text-blue">${p.total_ordered} units</span></td>
+        <td><span class="badge bg-green-lt text-green">${money(p.total_revenue)}</span></td>
+      </tr>`).join('')+'</tbody></table>';
+  }catch(e){toast('Could not load stats.','error');}
+}
+
+let searchDebounce=null;
+async function adminSearch(){
+  clearTimeout(searchDebounce);
+  searchDebounce=setTimeout(async()=>{
+    const q=document.getElementById('admin-search-q').value.trim();
+    const min=document.getElementById('admin-min').value;
+    const max=document.getElementById('admin-max').value;
+    const el=document.getElementById('admin-search-results');
+    if(!q&&!min&&!max){el.innerHTML='<div class="empty py-3"><p class="empty-title text-muted small">Enter search term above</p></div>';return;}
+    let url=BASE+'/products/search?';
+    const params=[];
+    if(q) params.push('q='+encodeURIComponent(q));
+    if(min) params.push('min_price='+min);
+    if(max) params.push('max_price='+max);
+    url+=params.join('&');
+    try{
+      const r=await fetch(url,{headers:hdr()});
+      if(r.status===404){el.innerHTML='<div class="empty py-3"><p class="empty-title">No products found</p></div>';return;}
+      const products=r.ok?await r.json():[];
+      el.innerHTML='<table class="table table-vcenter table-hover card-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Tags</th></tr></thead><tbody>'+
+        products.map(p=>`<tr>
+          <td class="fw-medium">${p.name}</td>
+          <td>${p.category?`<span class="badge bg-teal-lt text-teal">${p.category.name}</span>`:'—'}</td>
+          <td><span class="badge bg-green-lt text-green">${money(p.price)}</span></td>
+          <td><span class="badge ${p.stock_quantity>0?'bg-teal-lt text-teal':'bg-red-lt text-red'}">${p.stock_quantity}</span></td>
+          <td>${(p.tags||[]).map(t=>`<span class="tag-badge">${t.name}</span>`).join('')||'—'}</td>
+        </tr>`).join('')+'</tbody></table>';
+    }catch(e){toast('Search error.','error');}
+  },350);
+}
+
+async function adminFeatured(){
+  const el=document.getElementById('admin-search-results');
+  try{
+    const r=await fetch(BASE+'/products/featured',{headers:hdr()});
+    if(r.status===404){el.innerHTML='<div class="empty py-3"><p class="empty-title">No featured products yet. Link a "bestseller" tag to products first.</p></div>';return;}
+    const products=r.ok?await r.json():[];
+    document.getElementById('admin-search-q').value='';
+    document.getElementById('admin-min').value='';
+    document.getElementById('admin-max').value='';
+    el.innerHTML='<div class="p-2 ps-3 text-muted small border-bottom">⭐ Featured Products (bestseller tag)</div><table class="table table-vcenter table-hover card-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Tags</th></tr></thead><tbody>'+
+      products.map(p=>`<tr>
+        <td class="fw-medium">${p.name}</td>
+        <td>${p.category?`<span class="badge bg-teal-lt text-teal">${p.category.name}</span>`:'—'}</td>
+        <td><span class="badge bg-green-lt text-green">${money(p.price)}</span></td>
+        <td><span class="badge bg-teal-lt text-teal">${p.stock_quantity}</span></td>
+        <td>${(p.tags||[]).map(t=>`<span class="tag-badge">${t.name}</span>`).join('')||'—'}</td>
+      </tr>`).join('')+'</tbody></table>';
+    toast(`Showing ${products.length} featured products`,'info');
+  }catch(e){toast('Error.','error');}
+}
+
+function adminSearchClear(){
+  document.getElementById('admin-search-q').value='';
+  document.getElementById('admin-min').value='';
+  document.getElementById('admin-max').value='';
+  document.getElementById('admin-search-results').innerHTML='<div class="empty py-3"><p class="empty-title text-muted small">Enter search term above</p></div>';
+}
+
+async function loadUsers(){
+  const el=document.getElementById('users-list');
+  if(!token){el.innerHTML='<div class="empty py-4"><div class="empty-icon"><i class="ti ti-users"></i></div><p class="empty-title">Login first</p></div>';return;}
+  try{const r=await fetch(BASE+'/users',{headers:hdr()});const data=await r.json();
+    if(!data.length){el.innerHTML='<div class="empty py-4"><p class="empty-title">No users</p></div>';return;}
+    el.innerHTML='<table class="table table-vcenter table-hover card-table"><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th class="w-1">Action</th></tr></thead><tbody>'+
+      data.map(u=>`<tr><td class="text-muted">#${u.id}</td><td><div class="d-flex align-items-center gap-2"><span class="avatar avatar-sm rounded" style="background:linear-gradient(135deg,#D4793B,#E8956D)">${u.username[0].toUpperCase()}</span><span class="fw-medium">${u.username}</span></div></td><td class="text-muted">${u.email||'—'}</td><td><span class="badge ${u.role==='admin'?'bg-red-lt text-red':'bg-blue-lt text-blue'}">${u.role||'customer'}</span></td><td><button class="btn btn-sm btn-ghost-danger" onclick="delUser(${u.id})"><i class="ti ti-trash"></i></button></td></tr>`).join('')+'</tbody></table>';
+  }catch(e){el.innerHTML='<div class="empty py-4"><p class="text-danger">API offline</p></div>';}
+}
+
+async function delUser(id){try{const r=await fetch(BASE+'/users/'+id,{method:'DELETE',headers:hdr()});const d=await r.json();if(r.ok){toast('User deleted.','info');loadUsers();}else toast(d.message,'error');}catch(e){}}
+
+function initApp(){
+  document.querySelectorAll('.nav-link').forEach(el=>{if(el.id!=='nav-auth') el.style.display='none';});
+  document.getElementById('nav-auth').classList.add('active');
+  checkAPI();setInterval(checkAPI,10000);
+}
+
+initApp();
+</script>
+</body>
+</html>

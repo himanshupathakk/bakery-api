@@ -1,0 +1,7 @@
+flask
+flask-smorest
+flask-sqlalchemy
+flask-jwt-extended
+marshmallow
+python-dotenv
+passlib[bcrypt]

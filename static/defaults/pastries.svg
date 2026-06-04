@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#FDF0E6"/>
+  <!-- croissant shape -->
+  <path d="M120 200 Q80 160 120 120 Q160 90 200 110 Q240 90 280 120 Q320 160 280 200 Q240 230 200 220 Q160 230 120 200Z" fill="#D4793B"/>
+  <path d="M130 195 Q95 158 132 122 Q168 95 200 115 Q232 95 268 122 Q305 158 270 195 Q235 222 200 213 Q165 222 130 195Z" fill="#E8956D"/>
+  <path d="M145 188 Q115 158 148 128 Q175 107 200 120 Q225 107 252 128 Q285 158 255 188 Q228 210 200 203 Q172 210 145 188Z" fill="#F5B896"/>
+  <!-- shine -->
+  <ellipse cx="165" cy="150" rx="20" ry="12" fill="#FAD4B0" opacity="0.5"/>
+  <text x="200" y="285" text-anchor="middle" font-family="Georgia" font-size="16" fill="#B85E26" opacity="0.6">Sweet Crumbs</text>
+</svg>

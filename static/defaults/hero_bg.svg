@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 680 300" role="img">
+  <title>Bakery hero background</title>
+  <desc>Rich warm bakery background with creative decorative elements</desc>
+  <style>
+    .bg { fill: #F5DEC8; }
+    .arc1 { fill: #E8A87C; }
+    .arc2 { fill: #D4793B; }
+    .arc3 { fill: #C06028; }
+    .cream { fill: #FDF0E6; }
+    .wave { fill: none; stroke-linecap: round; }
+    .dot { fill: #C06028; }
+    .flame { fill: #FF9F43; }
+    .flame2 { fill: #FFD166; }
+    .sprk1 { fill: #FF8FAB; }
+    .sprk2 { fill: #72EFDD; }
+    .sprk3 { fill: #FFD166; }
+    .star-shape { fill: #D4793B; }
+  </style>
+
+  <rect class="bg" width="680" height="300"/>
+
+  <ellipse class="arc1" cx="720" cy="-30" rx="210" ry="210" opacity="0.35"/>
+  <ellipse class="arc2" cx="740" cy="-20" rx="150" ry="150" opacity="0.28"/>
+  <ellipse class="arc3" cx="760" cy="-10" rx="90"  ry="90"  opacity="0.22"/>
+  <ellipse class="arc1" cx="-60" cy="340" rx="200" ry="200" opacity="0.3"/>
+  <ellipse class="arc2" cx="-50" cy="350" rx="130" ry="130" opacity="0.22"/>
+  <circle class="arc2" cx="340" cy="300" r="110" opacity="0.14"/>
+  <circle class="arc1" cx="340" cy="300" r="70"  opacity="0.12"/>
+
+  <line x1="0"   y1="180" x2="180" y2="0"   stroke="#D4793B" stroke-width="0.8" opacity="0.1"/>
+  <line x1="0"   y1="240" x2="240" y2="0"   stroke="#D4793B" stroke-width="0.8" opacity="0.08"/>
+  <line x1="0"   y1="300" x2="300" y2="0"   stroke="#D4793B" stroke-width="0.8" opacity="0.07"/>
+  <line x1="60"  y1="300" x2="360" y2="0"   stroke="#C06028" stroke-width="0.8" opacity="0.06"/>
+  <line x1="380" y1="300" x2="680" y2="0"   stroke="#D4793B" stroke-width="0.8" opacity="0.07"/>
+  <line x1="440" y1="300" x2="680" y2="60"  stroke="#D4793B" stroke-width="0.8" opacity="0.06"/>
+  <line x1="500" y1="300" x2="680" y2="120" stroke="#C06028" stroke-width="0.8" opacity="0.05"/>
+
+  <g opacity="0.18" transform="translate(58,140)">
+    <rect class="arc3"  x="0"  y="55" width="72" height="28" rx="5"/>
+    <rect class="arc2"  x="8"  y="32" width="56" height="26" rx="4"/>
+    <rect class="arc1"  x="16" y="12" width="40" height="22" rx="4"/>
+    <ellipse class="cream" cx="36" cy="12" rx="20" ry="6"/>
+    <rect class="cream" x="18" y="8" width="5" height="10" rx="2"/>
+    <rect class="cream" x="30" y="6" width="5" height="12" rx="2"/>
+    <rect class="cream" x="43" y="8" width="5" height="10" rx="2"/>
+    <rect class="cream" x="22" y="-10" width="4" height="20" rx="2"/>
+    <rect class="cream" x="34" y="-12" width="4" height="22" rx="2"/>
+    <rect class="cream" x="46" y="-10" width="4" height="20" rx="2"/>
+    <ellipse class="flame2" cx="24" cy="-13" rx="3" ry="5"/>
+    <ellipse class="flame"  cx="36" cy="-16" rx="3" ry="6"/>
+    <ellipse class="flame2" cx="48" cy="-13" rx="3" ry="5"/>
+    <circle class="cream" cx="16" cy="68" r="3"/>
+    <circle class="cream" cx="28" cy="68" r="3"/>
+    <circle class="cream" cx="40" cy="68" r="3"/>
+    <circle class="cream" cx="52" cy="68" r="3"/>
+    <circle class="cream" cx="64" cy="68" r="3"/>
+  </g>
+
+  <g opacity="0.16" transform="translate(552,60)">
+    <path d="M10 40 Q-5 10 20 2 Q50 -8 68 15 Q85 38 70 58 Q55 75 30 68 Q5 60 10 40Z" fill="#C8864A"/>
+    <path d="M18 38 Q8 16 26 10 Q48 2 62 20 Q74 38 62 54 Q50 68 32 62 Q14 54 18 38Z" fill="#DFA060"/>
+    <path d="M26 36 Q20 22 32 18 Q46 12 56 26 Q64 40 56 50 Q48 60 36 56 Q22 50 26 36Z" fill="#EBB478"/>
+  </g>
+
+  <g opacity="0.14" transform="translate(290,12)">
+    <circle fill="#D4924E" cx="20" cy="20" r="20"/>
+    <circle fill="#5C2D0A" cx="12" cy="12" r="4"/>
+    <circle fill="#5C2D0A" cx="26" cy="10" r="3.5"/>
+    <circle fill="#5C2D0A" cx="28" cy="24" r="4"/>
+    <circle fill="#5C2D0A" cx="13" cy="26" r="3"/>
+    <circle fill="#D4924E" cx="50" cy="16" r="16"/>
+    <circle fill="#5C2D0A" cx="44" cy="10" r="3"/>
+    <circle fill="#5C2D0A" cx="54" cy="8"  r="3"/>
+    <circle fill="#5C2D0A" cx="58" cy="20" r="3.5"/>
+    <circle fill="#5C2D0A" cx="44" cy="22" r="3"/>
+  </g>
+
+  <g opacity="0.16" transform="translate(570,200)">
+    <path fill="#C06028" d="M8 62 Q0 40 15 28 L55 28 Q70 40 62 62Z"/>
+    <line x1="20" y1="30" x2="18" y2="62" stroke="#A85020" stroke-width="1.2" opacity="0.5"/>
+    <line x1="35" y1="29" x2="35" y2="62" stroke="#A85020" stroke-width="1.2" opacity="0.5"/>
+    <line x1="50" y1="30" x2="52" y2="62" stroke="#A85020" stroke-width="1.2" opacity="0.5"/>
+    <ellipse fill="#F5DEC8" cx="35" cy="26" rx="28" ry="30"/>
+    <ellipse fill="#EBC8A0" cx="35" cy="16" rx="22" ry="16"/>
+    <ellipse fill="#F5DEC8" cx="35" cy="10" rx="14" ry="10"/>
+    <circle  fill="#F5DEC8" cx="35" cy="4"  r="7"/>
+    <rect class="sprk1" x="24" y="10" width="10" height="3.5" rx="1.5" transform="rotate(30 29 12)"/>
+    <rect class="sprk2" x="38" y="6"  width="10" height="3.5" rx="1.5" transform="rotate(-20 43 8)"/>
+    <rect class="sprk3" x="44" y="16" width="9"  height="3"   rx="1.5" transform="rotate(45 49 18)"/>
+    <rect class="sprk1" x="20" y="20" width="9"  height="3"   rx="1.5" transform="rotate(-35 25 22)"/>
+  </g>
+
+  <g opacity="0.11" transform="translate(200,248) rotate(-18)">
+    <rect fill="#8B4513" x="0"   y="5" width="150" height="20" rx="10"/>
+    <rect fill="#6B3410" x="-18" y="0" width="22"  height="30" rx="8"/>
+    <rect fill="#6B3410" x="146" y="0" width="22"  height="30" rx="8"/>
+    <line x1="30"  y1="5" x2="30"  y2="25" stroke="#6B3410" stroke-width="1" opacity="0.4"/>
+    <line x1="55"  y1="5" x2="55"  y2="25" stroke="#6B3410" stroke-width="1" opacity="0.4"/>
+    <line x1="80"  y1="5" x2="80"  y2="25" stroke="#6B3410" stroke-width="1" opacity="0.4"/>
+    <line x1="105" y1="5" x2="105" y2="25" stroke="#6B3410" stroke-width="1" opacity="0.4"/>
+    <line x1="130" y1="5" x2="130" y2="25" stroke="#6B3410" stroke-width="1" opacity="0.4"/>
+  </g>
+
+  <g class="star-shape" opacity="0.22">
+    <path d="M510 25 L512.5 33 L521 33 L514.5 38 L517 46 L510 41 L503 46 L505.5 38 L499 33 L507.5 33Z"/>
+  </g>
+  <g class="star-shape" opacity="0.18">
+    <path d="M162 255 L164 261 L170 261 L165 265 L167 271 L162 267 L157 271 L159 265 L154 261 L160 261Z"/>
+  </g>
+  <g class="star-shape" opacity="0.16">
+    <path d="M420 268 L421.5 273 L427 273 L422.5 276 L424 281 L420 278 L416 281 L417.5 276 L413 273 L418.5 273Z"/>
+  </g>
+
+  <g opacity="0.14" transform="translate(490,240)">
+    <ellipse fill="#D4793B" cx="0" cy="-9" rx="5" ry="9"/>
+    <ellipse fill="#D4793B" cx="0" cy="9"  rx="5" ry="9"/>
+    <ellipse fill="#D4793B" cx="-9" cy="0" rx="9" ry="5"/>
+    <ellipse fill="#D4793B" cx="9"  cy="0" rx="9" ry="5"/>
+    <circle  fill="#C06028" cx="0" cy="0" r="5"/>
+  </g>
+  <g opacity="0.12" transform="translate(172,42)">
+    <ellipse fill="#C06028" cx="0" cy="-7" rx="4" ry="7"/>
+    <ellipse fill="#C06028" cx="0" cy="7"  rx="4" ry="7"/>
+    <ellipse fill="#C06028" cx="-7" cy="0" rx="7" ry="4"/>
+    <ellipse fill="#C06028" cx="7"  cy="0" rx="7" ry="4"/>
+    <circle  fill="#8B4513" cx="0" cy="0" r="4"/>
+  </g>
+
+  <circle class="dot" cx="108" cy="55"  r="3.5" opacity="0.18"/>
+  <circle class="dot" cx="72"  cy="185" r="3"   opacity="0.14"/>
+  <circle class="dot" cx="140" cy="270" r="4"   opacity="0.13"/>
+  <circle class="dot" cx="590" cy="140" r="3.5" opacity="0.16"/>
+  <circle class="dot" cx="620" cy="260" r="3"   opacity="0.13"/>
+  <circle class="dot" cx="340" cy="22"  r="3"   opacity="0.12"/>
+  <circle class="dot" cx="455" cy="280" r="3"   opacity="0.11"/>
+  <circle class="dot" cx="230" cy="285" r="2.5" opacity="0.11"/>
+  <circle class="dot" cx="258" cy="18"  r="2.5" opacity="0.1"/>
+
+  <path d="M580 0 Q680 80 680 180" fill="none" stroke="#C06028" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.2"/>
+  <path d="M560 0 Q680 100 680 220" fill="none" stroke="#D4793B" stroke-width="1" stroke-dasharray="3 10" opacity="0.14"/>
+  <path d="M0 120 Q0 240 110 300" fill="none" stroke="#C06028" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.18"/>
+</svg>

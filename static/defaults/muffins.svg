@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#FDE8D8"/>
+  <!-- muffin wrapper -->
+  <path d="M140 260 Q130 200 150 190 L250 190 Q270 200 260 260Z" fill="#F5E6D3"/>
+  <path d="M145 260 Q137 205 155 196 L245 196 Q263 205 255 260Z" fill="#E8D5C0" opacity="0.5"/>
+  <!-- vertical lines on wrapper -->
+  <line x1="170" y1="196" x2="165" y2="260" stroke="#D4C0A8" stroke-width="1.5"/>
+  <line x1="200" y1="195" x2="200" y2="260" stroke="#D4C0A8" stroke-width="1.5"/>
+  <line x1="230" y1="196" x2="235" y2="260" stroke="#D4C0A8" stroke-width="1.5"/>
+  <!-- muffin top -->
+  <ellipse cx="200" cy="175" rx="75" ry="55" fill="#D4793B"/>
+  <ellipse cx="200" cy="168" rx="68" ry="48" fill="#E8956D"/>
+  <!-- blueberries -->
+  <circle cx="178" cy="158" r="10" fill="#5B4FCF"/>
+  <circle cx="212" cy="150" r="9" fill="#5B4FCF"/>
+  <circle cx="195" cy="175" r="8" fill="#5B4FCF"/>
+  <circle cx="225" cy="170" r="9" fill="#5B4FCF"/>
+  <circle cx="168" cy="178" r="8" fill="#5B4FCF"/>
+  <!-- shine -->
+  <ellipse cx="180" cy="155" rx="22" ry="13" fill="#FAD4B0" opacity="0.4"/>
+  <text x="200" y="290" text-anchor="middle" font-family="Georgia" font-size="16" fill="#B85E26" opacity="0.6">Sweet Crumbs</text>
+</svg>

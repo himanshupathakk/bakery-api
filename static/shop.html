@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sweet Crumbs Bakery</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#D4793B;--primary-dark:#B85E26;--primary-light:#F5E6D3;--cream:#FDF8F3;--dark:#2C1810;--text:#5C3D2E;--gray:#8B7355;--white:#fff}
+body{font-family:'Poppins',sans-serif;background:var(--cream);color:var(--text)}
+/* TOAST */
+.toast-wrap{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:10px}
+.toast{display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:12px;font-size:13px;font-weight:500;min-width:260px;box-shadow:0 8px 30px rgba(0,0,0,.15);animation:slideIn .3s ease}
+.toast.success{background:#fff;border-left:4px solid #2D6A4F;color:#2D6A4F}
+.toast.error{background:#fff;border-left:4px solid #D4793B;color:#D4793B}
+.toast.info{background:#fff;border-left:4px solid #3B82F6;color:#3B82F6}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+/* NAV */
+nav{background:var(--white);box-shadow:0 2px 20px rgba(212,121,59,.1);position:sticky;top:0;z-index:1000}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:42px;height:42px;background:linear-gradient(135deg,var(--primary),#E8956D);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.logo-text{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark)}
+.logo-text span{color:var(--primary)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{text-decoration:none;color:var(--gray);font-size:14px;font-weight:500;transition:color .2s;cursor:pointer}
+.nav-links a:hover,.nav-links a.active{color:var(--primary)}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.cart-btn{position:relative;background:var(--primary);color:#fff;border:none;width:42px;height:42px;border-radius:12px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.cart-count{position:absolute;top:-6px;right:-6px;background:#D63939;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.auth-btn{background:transparent;border:2px solid var(--primary);color:var(--primary);padding:8px 18px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.auth-btn:hover{background:var(--primary);color:#fff}
+/* HERO */
+.hero{background:linear-gradient(135deg,#FDF0E6,#FDE8D8,#F5D5C0);padding:80px 24px;position:relative;overflow:hidden;background-image:url("/static/defaults/hero_bg.svg");background-size:cover;background-position:center}
+.hero::before{content:'🎂';position:absolute;right:-20px;top:-20px;font-size:200px;opacity:.06;transform:rotate(-15deg)}
+.hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);color:var(--primary);padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:16px}
+.hero-title{font-family:'Playfair Display',serif;font-size:52px;font-weight:700;color:var(--dark);line-height:1.2;margin-bottom:16px}
+.hero-title span{color:var(--primary)}
+.hero-sub{font-size:16px;color:var(--gray);line-height:1.7;margin-bottom:32px}
+.hero-btns{display:flex;gap:14px}
+.btn-primary{background:linear-gradient(135deg,var(--primary),#E8956D);color:#fff;border:none;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,121,59,.3)}
+.btn-outline{background:transparent;border:2px solid var(--primary);color:var(--primary);padding:12px 28px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-outline:hover{background:var(--primary);color:#fff}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hero-card{border-radius:16px;height:180px;background:linear-gradient(135deg,#F5D5C0,#E8956D);display:flex;align-items:center;justify-content:center;font-size:64px}
+.hero-stats{display:flex;gap:32px;margin-top:32px}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--dark)}
+.stat-text{font-size:12px;color:var(--gray)}
+/* SECTION */
+.section{max-width:1200px;margin:0 auto;padding:64px 24px}
+.section-tag{display:inline-flex;align-items:center;gap:6px;background:var(--primary-light);color:var(--primary);padding:5px 14px;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:12px}
+.section-title{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--dark);margin-bottom:8px}
+.section-sub{font-size:15px;color:var(--gray)}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:16px}
+/* CATEGORIES */
+.cats-strip{background:var(--white);padding:20px 0;border-top:1px solid #F0DDD0;border-bottom:1px solid #F0DDD0}
+.cats-inner{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;gap:12px;overflow-x:auto;scrollbar-width:none}
+.cat-chip{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;border:2px solid #F0DDD0;background:var(--white);cursor:pointer;font-size:13px;font-weight:500;color:var(--gray);white-space:nowrap;transition:all .2s;flex-shrink:0}
+.cat-chip:hover,.cat-chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+/* GRID */
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+.product-card{background:var(--white);border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(212,121,59,.08);transition:all .25s}
+.product-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px rgba(212,121,59,.18)}
+.product-img{height:200px;background:linear-gradient(135deg,#FDE8D8,#F5D5C0);display:flex;align-items:center;justify-content:center;font-size:72px;position:relative}
+.product-badge{position:absolute;top:12px;left:12px;background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px}
+.product-badge.out{background:#D63939}
+.product-body{padding:18px}
+.product-cat{font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.product-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--dark);margin-bottom:6px}
+.product-desc{font-size:13px;color:var(--gray);margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.product-footer{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.product-price{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark)}
+.add-btn{background:var(--primary);color:#fff;border:none;width:38px;height:38px;border-radius:10px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.add-btn:disabled{background:#ddd;cursor:not-allowed}
+.tags-row{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.tag-pill{font-size:10px;padding:2px 8px;border-radius:999px;background:#FFF3CD;color:#856404;border:1px solid #FFC107;font-weight:600}
+.stock-text{font-size:11px;color:#2D6A4F;font-weight:600}
+.stock-text.low{color:#D4793B}
+.stock-text.out{color:#D63939}
+/* REVIEWS */
+.review-card{background:var(--white);border-radius:14px;padding:18px;margin-bottom:12px;box-shadow:0 2px 12px rgba(212,121,59,.06)}
+.review-stars{color:#F59E0B;font-size:16px;margin-bottom:8px}
+.review-comment{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:8px}
+.review-author{font-size:12px;color:var(--gray);font-weight:500}
+.stars-input{display:flex;gap:6px;margin-bottom:14px}
+.star-btn{font-size:24px;cursor:pointer;background:none;border:none;transition:transform .1s}
+.star-btn:hover{transform:scale(1.2)}
+/* CART DRAWER */
+.cart-overlay{display:none;position:fixed;inset:0;background:rgba(44,24,16,.4);z-index:2000}
+.cart-overlay.open{display:block}
+.cart-drawer{position:fixed;right:0;top:0;bottom:0;width:400px;background:var(--white);z-index:2001;transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,.15)}
+.cart-drawer.open{transform:translateX(0)}
+.cart-head{padding:24px;border-bottom:1px solid #F0DDD0;display:flex;align-items:center;justify-content:space-between}
+.cart-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--dark)}
+.cart-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray);width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.cart-close:hover{background:#F5EDE6}
+.cart-items{flex:1;overflow-y:auto;padding:16px}
+.cart-item{display:flex;gap:14px;padding:14px;border-radius:14px;background:var(--cream);margin-bottom:10px;align-items:center}
+.cart-item-img{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#FDE8D8,#F5D5C0);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.cart-item-info{flex:1}
+.cart-item-name{font-size:14px;font-weight:600;color:var(--dark);margin-bottom:4px}
+.cart-item-price{font-size:13px;color:var(--primary);font-weight:600}
+.cart-item-qty{display:flex;align-items:center;gap:8px;margin-top:8px}
+.qty-btn{background:var(--white);border:1px solid #F0DDD0;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.qty-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+.cart-remove{background:none;border:none;color:#D63939;cursor:pointer;font-size:15px}
+.cart-foot{padding:20px 24px;border-top:1px solid #F0DDD0}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cart-total-val{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--dark)}
+.checkout-btn{background:linear-gradient(135deg,var(--primary),#E8956D);color:#fff;border:none;width:100%;padding:16px;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s}
+.checkout-btn:hover{transform:translateY(-2px)}
+.cart-empty{text-align:center;padding:48px 24px;color:var(--gray)}
+/* MODALS */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(44,24,16,.5);z-index:3000;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--white);border-radius:24px;padding:36px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:popIn .3s ease;position:relative;max-height:90vh;overflow-y:auto}
+@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--gray)}
+.modal-icon{text-align:center;font-size:48px;margin-bottom:16px}
+.modal-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--dark);text-align:center;margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--gray);text-align:center;margin-bottom:24px}
+.modal-tabs{display:flex;background:var(--cream);border-radius:12px;padding:4px;margin-bottom:24px}
+.modal-tab{flex:1;padding:9px;border:none;background:transparent;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray);transition:all .2s}
+.modal-tab.active{background:var(--white);color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.form-field{margin-bottom:16px}
+.form-field label{font-size:12px;font-weight:600;color:var(--text);display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
+.form-field input,.form-field textarea,.form-field select{width:100%;padding:12px 14px;border:2px solid #F0DDD0;border-radius:10px;font-size:14px;color:var(--dark);outline:none;transition:border-color .2s;font-family:'Poppins',sans-serif}
+.form-field input:focus,.form-field textarea:focus{border-color:var(--primary)}
+.modal-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--primary),#E8956D);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
+.modal-submit:hover{opacity:.9}
+/* FEATURES */
+.features{background:var(--white);padding:48px 24px}
+.features-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.feature{text-align:center;padding:24px 16px}
+.feature-icon{width:56px;height:56px;background:var(--primary-light);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:24px}
+.feature-title{font-size:15px;font-weight:600;color:var(--dark);margin-bottom:6px}
+.feature-text{font-size:13px;color:var(--gray);line-height:1.5}
+/* FOOTER */
+footer{background:var(--dark);color:#C8A882;padding:48px 24px 24px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:40px}
+.footer-heading{font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-links a{color:#9E7B5A;text-decoration:none;font-size:13px;cursor:pointer}
+.footer-links a:hover{color:var(--primary)}
+.footer-bottom{border-top:1px solid #3D2818;padding-top:20px;text-align:center;font-size:12px;color:#6B4F35}
+/* ORDERS PAGE */
+.order-card{background:var(--white);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 4px 20px rgba(212,121,59,.08)}
+.order-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.order-id{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--dark)}
+.status-badge{padding:4px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.status-pending{background:#FEF9C3;color:#854D0E}
+.status-confirmed{background:#DBEAFE;color:#1E40AF}
+.status-preparing{background:#EDE9FE;color:#5B21B6}
+.status-ready{background:#D1FAE5;color:#065F46}
+.status-delivered{background:#DCFCE7;color:#14532D}
+.status-cancelled{background:#FEE2E2;color:#991B1B}
+.order-items-list{font-size:13px;color:var(--gray);margin-bottom:10px}
+.order-total{font-size:16px;font-weight:600;color:var(--dark)}
+/* USER MENU */
+.user-menu{position:relative}
+.user-avatar-btn{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--primary),#E8956D);border:none;cursor:pointer;color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.user-dropdown{position:absolute;right:0;top:48px;background:var(--white);border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.12);min-width:180px;overflow:hidden;display:none;border:1px solid #F0DDD0;z-index:100}
+.user-dropdown.open{display:block}
+.user-dropdown a{display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13px;color:var(--text);text-decoration:none;cursor:pointer}
+.user-dropdown a:hover{background:var(--cream)}
+.user-dd-divider{height:1px;background:#F0DDD0}
+/* LOADING / EMPTY */
+.loading{text-align:center;padding:48px;color:var(--gray)}
+.spinner{width:40px;height:40px;border:3px solid #F0DDD0;border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{text-align:center;padding:64px 24px;color:var(--gray)}
+.empty-icon{font-size:64px;margin-bottom:16px}
+.empty-title{font-family:'Playfair Display',serif;font-size:24px;color:var(--dark);margin-bottom:8px}
+/* PAGES */
+.page{display:none}.page.active{display:block}
+@media(max-width:768px){
+  .hero-inner{grid-template-columns:1fr}.hero-grid{display:none}
+  .features-inner{grid-template-columns:1fr 1fr}
+  .footer-top{grid-template-columns:1fr}
+  .cart-drawer{width:100%}
+  .hero-title{font-size:36px}
+}
+</style>
+</head>
+<body>
+<div class="toast-wrap" id="toasts"></div>
+
+<!-- CART OVERLAY + DRAWER -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-head">
+    <div class="cart-title">🛒 Your Cart</div>
+    <button class="cart-close" onclick="closeCart()"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="cart-items" id="cart-items-list"></div>
+  <div class="cart-foot" id="cart-foot" style="display:none">
+    <div class="form-field"><label>Order Note (optional)</label><input type="text" id="order-note" placeholder="e.g. Extra packaging, no nuts..."></div>
+    <div class="cart-total-row">
+      <span style="font-size:14px;color:var(--gray)">Total</span>
+      <span class="cart-total-val" id="cart-total">€0.00</span>
+    </div>
+    <button class="checkout-btn" onclick="openCheckout()"><i class="ti ti-lock me-1"></i> Checkout Securely</button>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('auth-modal')"><i class="ti ti-x"></i></button>
+    <div class="modal-icon">🎂</div>
+    <div class="modal-title">Sweet Crumbs</div>
+    <div class="modal-sub">Sign in to place your order!</div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchAuthTab('login')">Login</button>
+      <button class="modal-tab" onclick="switchAuthTab('register')">Register</button>
+    </div>
+    <div id="auth-login">
+      <div class="form-field"><label>Username</label><input id="l-u" placeholder="Enter username" type="text"></div>
+      <div class="form-field"><label>Password</label><input id="l-p" placeholder="Enter password" type="password"></div>
+      <button class="modal-submit" onclick="doLogin()">Login & Continue 🍰</button>
+    </div>
+    <div id="auth-register" style="display:none">
+      <div class="form-field"><label>Username</label><input id="r-u" placeholder="Choose username" type="text"></div>
+      <div class="form-field"><label>Email (optional)</label><input id="r-e" placeholder="your@email.com" type="email"></div>
+      <div class="form-field"><label>Password</label><input id="r-p" placeholder="Create password (min 4 chars)" type="password"></div>
+      <button class="modal-submit" onclick="doRegister()">Create Account 🎉</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkout-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('checkout-modal')"><i class="ti ti-x"></i></button>
+    <div class="modal-icon">🧾</div>
+    <div class="modal-title">Order Summary</div>
+    <div class="modal-sub">Review before placing your order</div>
+    <div id="checkout-summary" style="background:var(--cream);border-radius:14px;padding:16px;margin-bottom:20px"></div>
+    <button class="modal-submit" id="place-btn" onclick="placeOrder()">Place Order 🎂</button>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal-overlay" id="review-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('review-modal')"><i class="ti ti-x"></i></button>
+    <div class="modal-icon">⭐</div>
+    <div class="modal-title">Write a Review</div>
+    <div class="modal-sub" id="review-product-name"></div>
+    <input type="hidden" id="review-product-id">
+    <div class="form-field">
+      <label>Your Rating</label>
+      <div class="stars-input" id="stars-input">
+        <button class="star-btn" onclick="setRating(1)">☆</button>
+        <button class="star-btn" onclick="setRating(2)">☆</button>
+        <button class="star-btn" onclick="setRating(3)">☆</button>
+        <button class="star-btn" onclick="setRating(4)">☆</button>
+        <button class="star-btn" onclick="setRating(5)">☆</button>
+      </div>
+    </div>
+    <div class="form-field"><label>Comment</label><textarea id="review-comment" rows="4" placeholder="Tell us what you loved about this product!"></textarea></div>
+    <button class="modal-submit" onclick="submitReview()">Submit Review ⭐</button>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" onclick="showPage('home');setActive(0)">
+      <div class="logo-icon">🎂</div>
+      <div class="logo-text">Sweet<span>Crumbs</span></div>
+    </a>
+    <div class="nav-links">
+      <a class="active" onclick="showPage('home');setActive(0)">Home</a>
+      <a onclick="showPage('shop');setActive(1)">Shop</a>
+      <a onclick="showPage('orders');setActive(2)">My Orders</a>
+
+    </div>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="openCart()">
+        <i class="ti ti-shopping-cart"></i>
+        <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <div id="auth-area">
+        <button class="auth-btn" onclick="openModal('auth-modal')">Login</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HOME PAGE ═══ -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">🌟 Freshly Baked Daily</div>
+        <h1 class="hero-title">Baked with Love,<br>Made for <span>You</span></h1>
+        <p class="hero-sub">Discover handcrafted cakes, pastries, and breads made from the finest natural ingredients. Every bite tells a story of passion.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('shop');setActive(1)"><i class="ti ti-shopping-bag"></i> Order Now</button>
+          <button class="btn-outline" onclick="showPage('shop');setActive(1)">View Menu</button>
+        </div>
+        <div class="hero-stats">
+          <div><div class="stat-num" id="h-products">—</div><div class="stat-text">Fresh Items</div></div>
+          <div><div class="stat-num" id="h-cats">—</div><div class="stat-text">Categories</div></div>
+          <div><div class="stat-num">100%</div><div class="stat-text">Natural</div></div>
+        </div>
+      </div>
+      <div class="hero-grid" id="hero-grid">
+        <div class="hero-card" id="hc-0">🎂</div>
+        <div class="hero-card" id="hc-1">🧁</div>
+        <div class="hero-card" id="hc-2">🍰</div>
+        <div class="hero-card" id="hc-3">🥐</div>
+      </div>
+    </div>
+  </div>
+  <div class="features">
+    <div class="features-inner">
+      <div class="feature"><div class="feature-icon">🌾</div><div class="feature-title">Fresh Ingredients</div><div class="feature-text">Only the finest natural ingredients sourced locally every morning.</div></div>
+      <div class="feature"><div class="feature-icon">🚚</div><div class="feature-title">Fast Delivery</div><div class="feature-text">Get your order delivered fresh to your doorstep within 2 hours.</div></div>
+      <div class="feature"><div class="feature-icon">👨‍🍳</div><div class="feature-title">Expert Bakers</div><div class="feature-text">Our professional bakers craft each item with love and expertise.</div></div>
+      <div class="feature"><div class="feature-icon">🎁</div><div class="feature-title">Custom Orders</div><div class="feature-text">Special occasions? We create custom cakes tailored just for you.</div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">⭐ Bestsellers</div>
+        <h2 class="section-title">Fresh From the Oven</h2>
+        <p class="section-sub">Our most loved baked goods, made fresh every morning</p>
+      </div>
+      <button class="btn-outline" onclick="showPage('shop');setActive(1)" style="padding:10px 20px;font-size:13px">View All →</button>
+    </div>
+    <div class="products-grid" id="featured-grid">
+      <div class="loading"><div class="spinner"></div>Loading...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SHOP PAGE ═══ -->
+<div class="page" id="page-shop">
+  <!-- Search Bar -->
+  <div style="background:var(--white);padding:16px 24px;border-bottom:1px solid #F0DDD0">
+    <div style="max-width:1200px;margin:0 auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px;position:relative">
+        <i class="ti ti-search" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--gray);font-size:16px"></i>
+        <input id="search-input" type="text" placeholder="Search products by name..."
+          style="width:100%;padding:10px 14px 10px 38px;border:2px solid #F0DDD0;border-radius:10px;font-size:14px;outline:none;font-family:Poppins,sans-serif"
+          oninput="onSearchInput()" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='#F0DDD0'">
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input id="min-price" type="number" placeholder="Min €" style="width:80px;padding:10px 12px;border:2px solid #F0DDD0;border-radius:10px;font-size:13px;outline:none;font-family:Poppins,sans-serif" oninput="onSearchInput()" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='#F0DDD0'">
+        <input id="max-price" type="number" placeholder="Max €" style="width:80px;padding:10px 12px;border:2px solid #F0DDD0;border-radius:10px;font-size:13px;outline:none;font-family:Poppins,sans-serif" oninput="onSearchInput()" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='#F0DDD0'">
+        <button onclick="clearSearch()" style="padding:10px 16px;background:var(--cream);border:2px solid #F0DDD0;border-radius:10px;font-size:13px;cursor:pointer;color:var(--gray);font-family:Poppins,sans-serif">✕ Clear</button>
+        <button onclick="showFeatured()" style="padding:10px 16px;background:var(--primary);border:none;border-radius:10px;font-size:13px;cursor:pointer;color:#fff;font-family:Poppins,sans-serif;font-weight:600">⭐ Featured</button>
+      </div>
+    </div>
+  </div>
+  <div class="cats-strip">
+    <div class="cats-inner" id="cats-strip">
+      <div class="cat-chip active" onclick="filterCat(null,this)">🍽️ All Items</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-head">
+      <div>
+        <div class="section-tag">🛍️ Our Menu</div>
+        <h2 class="section-title" id="shop-title">Everything We Bake</h2>
+        <p class="section-sub" id="shop-sub">Browse our full collection of handcrafted treats</p>
+      </div>
+      <span style="font-size:13px;color:var(--gray)" id="item-count"></span>
+    </div>
+    <div class="products-grid" id="shop-grid">
+      <div class="loading"><div class="spinner"></div>Loading...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ORDERS PAGE ═══ -->
+<div class="page" id="page-orders">
+  <div class="section">
+    <div class="section-tag">📦 My Orders</div>
+    <h2 class="section-title">Order History</h2>
+    <p class="section-sub" style="margin-bottom:32px">Track your delicious orders</p>
+    <div id="orders-list">
+      <div class="empty-state">
+        <div class="empty-icon">🛒</div>
+        <div class="empty-title">No orders yet</div>
+        <p>Login and place your first order!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="logo" style="margin-bottom:12px">
+          <div class="logo-icon">🎂</div>
+          <div class="logo-text" style="color:#fff">Sweet<span>Crumbs</span></div>
+        </div>
+        <p style="font-size:13px;color:#9E7B5A;line-height:1.7">Handcrafted with love since 1995. Bringing joy through every bite of our freshly baked goods.</p>
+      </div>
+      <div>
+        <div class="footer-heading">Quick Links</div>
+        <ul class="footer-links">
+          <li><a onclick="showPage('home');setActive(0)">Home</a></li>
+          <li><a onclick="showPage('shop');setActive(1)">Shop</a></li>
+          <li><a onclick="showPage('orders');setActive(2)">My Orders</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Contact</div>
+        <ul class="footer-links">
+          <li><a>📍 Berlin, Germany</a></li>
+          <li><a>📞 +49 123 456 789</a></li>
+          <li><a>✉️ hello@sweetcrumbs.de</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Sweet Crumbs Bakery · Powered by Flask REST API 🎂</div>
+  </div>
+</footer>
+
+<script>
+const BASE='http://localhost:5000';
+let token=null,me=null,userId=null,cart=[],allProducts=[],allCats=[],selectedRating=0;
+
+const itemEmojis={cake:'🎂',cupcake:'🧁',muffin:'🧁',bread:'🍞',croissant:'🥐',donut:'🍩',cookie:'🍪',pie:'🥧',macaron:'🍬',brownie:'🍫',tart:'🥧',cheesecake:'🍰',eclair:'🍮',default:'🎂'};
+const catEmojis={Cakes:'🎂',Pastries:'🥐',Cookies:'🍪',Breads:'🍞',Cupcakes:'🧁',Muffins:'🧁',Donuts:'🍩',Pies:'🥧',default:'🍰'};
+
+function getEmoji(name){const n=name.toLowerCase();for(const[k,v]of Object.entries(itemEmojis))if(n.includes(k))return v;return itemEmojis.default;}
+function getCatEmoji(name){return catEmojis[name]||catEmojis.default;}
+
+function toast(msg,type='success'){
+  const c=document.getElementById('toasts');
+  const t=document.createElement('div');
+  const icons={success:'ti-circle-check',error:'ti-circle-x',info:'ti-info-circle'};
+  t.className='toast '+type;
+  t.innerHTML=`<i class="ti ${icons[type]}" style="font-size:18px;flex-shrink:0"></i><span>${msg}</span>`;
+  c.appendChild(t);setTimeout(()=>t?.remove(),3500);
+}
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(name==='home')loadHome();
+  if(name==='shop')loadShop();
+  if(name==='orders')loadOrders();
+
+}
+
+function setActive(idx){
+  document.querySelectorAll('.nav-links a').forEach((a,i)=>a.classList.toggle('active',i===idx));
+}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+function hdr(){const h={'Content-Type':'application/json'};if(token)h['Authorization']='Bearer '+token;return h;}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+function switchAuthTab(tab){
+  document.getElementById('auth-login').style.display=tab==='login'?'':'none';
+  document.getElementById('auth-register').style.display=tab==='register'?'':'none';
+  document.querySelectorAll('.modal-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
+}
+
+async function doLogin(){
+  const u=document.getElementById('l-u').value.trim(),p=document.getElementById('l-p').value.trim();
+  if(!u||!p){toast('Please fill in all fields.','error');return;}
+  try{
+    const r=await fetch(BASE+'/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+    const d=await r.json();
+    if(r.ok){token=d.access_token;me=u;userId=d.user.id;updateAuthUI();closeModal('auth-modal');toast(`Welcome back, ${me}! 🎉`);}
+    else toast(d.message||'Invalid credentials.','error');
+  }catch(e){toast('Cannot connect to API. Is server running?','error');}
+}
+
+async function doRegister(){
+  const u=document.getElementById('r-u').value.trim(),p=document.getElementById('r-p').value.trim(),e=document.getElementById('r-e').value.trim();
+  if(!u||!p){toast('Username and password required.','error');return;}
+  if(p.length<4){toast('Password must be at least 4 characters.','error');return;}
+  try{
+    const r=await fetch(BASE+'/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p,email:e||undefined})});
+    const d=await r.json();
+    if(r.ok){toast('Account created! Please login.','success');switchAuthTab('login');}
+    else toast(d.message||'Registration failed.','error');
+  }catch(e){toast('Cannot connect to API.','error');}
+}
+
+async function doLogout(){
+  try{await fetch(BASE+'/logout',{method:'POST',headers:hdr()});}catch(e){}
+  token=null;me=null;userId=null;updateAuthUI();toast('See you soon! 👋','info');
+}
+
+function updateAuthUI(){
+  const area=document.getElementById('auth-area');
+  if(token){
+    area.innerHTML=`<div class="user-menu">
+      <button class="user-avatar-btn" onclick="toggleUserMenu()">${me[0].toUpperCase()}</button>
+      <div class="user-dropdown" id="user-dd">
+        <a onclick="openProfile();toggleUserMenu()"><i class="ti ti-user me-2"></i>${me}</a>
+        <div class="user-dd-divider"></div>
+        <a onclick="showPage('orders');setActive(2);toggleUserMenu()"><i class="ti ti-package me-2"></i>My Orders</a>
+        <div class="user-dd-divider"></div>
+        <a onclick="doLogout()"><i class="ti ti-logout me-2"></i>Logout</a>
+      </div>
+    </div>`;
+  }else{
+    area.innerHTML='<button class="auth-btn" onclick="openModal(\'auth-modal\')">Login</button>';
+  }
+}
+
+function toggleUserMenu(){document.getElementById('user-dd')?.classList.toggle('open');}
+document.addEventListener('click',e=>{if(!e.target.closest('.user-menu'))document.getElementById('user-dd')?.classList.remove('open');});
+
+// ── CART ──────────────────────────────────────────────────────────────────────
+function openCart(){document.getElementById('cart-overlay').classList.add('open');document.getElementById('cart-drawer').classList.add('open');renderCart();}
+function closeCart(){document.getElementById('cart-overlay').classList.remove('open');document.getElementById('cart-drawer').classList.remove('open');}
+
+function addToCartById(id){
+  const p=allProducts.find(x=>x.id===id);
+  if(p) addToCart(p);
+  else toast('Product not found.','error');
+}
+
+function addToCart(p){
+  if(!token){toast('Please login to add items! 🔐','info');openModal('auth-modal');return;}
+  if(!p.is_available||p.stock_quantity===0){toast('Sorry, this item is unavailable!','error');return;}
+  const ex=cart.find(c=>c.id===p.id);
+  if(ex){if(ex.qty>=p.stock_quantity){toast(`Only ${p.stock_quantity} available!`,'error');return;}ex.qty++;}
+  else cart.push({...p,qty:1});
+  updateCartCount();
+  toast(`${p.name} added to cart! 🛒`);
+}
+
+function removeFromCart(id){cart=cart.filter(c=>c.id!==id);updateCartCount();renderCart();}
+function updateQty(id,d){const i=cart.find(c=>c.id===id);if(!i)return;i.qty+=d;if(i.qty<=0)removeFromCart(id);else{updateCartCount();renderCart();}}
+function cartTotal(){return cart.reduce((s,c)=>s+(c.price*c.qty),0);}
+function updateCartCount(){document.getElementById('cart-count').textContent=cart.reduce((s,c)=>s+c.qty,0);}
+
+function renderCart(){
+  const el=document.getElementById('cart-items-list'),foot=document.getElementById('cart-foot');
+  if(!cart.length){el.innerHTML='<div class="cart-empty"><div style="font-size:56px;margin-bottom:12px">🛒</div><p>Your cart is empty</p><p style="font-size:12px;margin-top:6px;color:#aaa">Add some treats!</p></div>';foot.style.display='none';return;}
+  foot.style.display='block';
+  document.getElementById('cart-total').textContent='€'+cartTotal().toFixed(2);
+  el.innerHTML=cart.map(c=>`<div class="cart-item">
+    <div class="cart-item-img">${getEmoji(c.name)}</div>
+    <div class="cart-item-info">
+      <div class="cart-item-name">${c.name}</div>
+      <div class="cart-item-price">€${(c.price*c.qty).toFixed(2)}</div>
+      <div class="cart-item-qty">
+        <button class="qty-btn" onclick="updateQty(${c.id},-1)">−</button>
+        <span style="font-size:13px;font-weight:600;min-width:20px;text-align:center">${c.qty}</span>
+        <button class="qty-btn" onclick="updateQty(${c.id},1)">+</button>
+        <button class="cart-remove" onclick="removeFromCart(${c.id})"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function openCheckout(){
+  if(!token){closeCart();openModal('auth-modal');return;}
+  const sum=document.getElementById('checkout-summary');
+  sum.innerHTML=cart.map(c=>`<div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gray);margin-bottom:8px"><span>${getEmoji(c.name)} ${c.name} ×${c.qty}</span><span>€${(c.price*c.qty).toFixed(2)}</span></div>`).join('')
+    +`<div style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;color:var(--dark);border-top:1px solid #F0DDD0;padding-top:10px;margin-top:4px"><span>Total</span><span>€${cartTotal().toFixed(2)}</span></div>`;
+  closeCart();openModal('checkout-modal');
+}
+
+async function placeOrder(){
+  const btn=document.getElementById('place-btn');
+  btn.textContent='Placing...';btn.disabled=true;
+  try{
+    const note=document.getElementById('order-note').value.trim();
+    const items=cart.map(c=>({product_id:c.id,quantity:c.qty}));
+    const r=await fetch(BASE+'/orders',{method:'POST',headers:hdr(),body:JSON.stringify({items,note:note||undefined})});
+    const d=await r.json();
+    if(r.ok){
+      toast(`Order #${d.id} placed! Total: €${d.total_price} 🎉`);
+      cart=[];updateCartCount();closeModal('checkout-modal');
+      document.getElementById('order-note').value='';
+      loadHome();loadShop();
+    }else toast(d.message||'Failed to place order.','error');
+  }catch(e){toast('Error: '+e.message,'error');}
+  btn.textContent='Place Order 🎂';btn.disabled=false;
+}
+
+// ── REVIEWS ───────────────────────────────────────────────────────────────────
+function setRating(n){
+  selectedRating=n;
+  document.querySelectorAll('.star-btn').forEach((b,i)=>b.textContent=i<n?'★':'☆');
+}
+
+function openReviewModal(productId,productName){
+  if(!token){toast('Please login to write a review!','info');openModal('auth-modal');return;}
+  document.getElementById('review-product-id').value=productId;
+  document.getElementById('review-product-name').textContent=`Reviewing: ${productName}`;
+  document.getElementById('review-comment').value='';
+  setRating(0);
+  openModal('review-modal');
+}
+
+async function submitReview(){
+  if(!selectedRating){toast('Please select a rating!','error');return;}
+  const pid=document.getElementById('review-product-id').value;
+  const comment=document.getElementById('review-comment').value.trim();
+  try{
+    const r=await fetch(`${BASE}/products/${pid}/reviews`,{method:'POST',headers:hdr(),body:JSON.stringify({rating:selectedRating,comment:comment||undefined})});
+    const d=await r.json();
+    if(r.ok){toast('Review submitted! Thank you ⭐');closeModal('review-modal');loadOrders();}
+    else toast(d.message||'Failed.','error');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+// ── DATA LOADING ──────────────────────────────────────────────────────────────
+function statusBadge(s){
+  const m={pending:'status-pending',confirmed:'status-confirmed',preparing:'status-preparing',ready:'status-ready',delivered:'status-delivered',cancelled:'status-cancelled'};
+  return `<span class="status-badge ${m[s]||''}">${s}</span>`;
+}
+
+function renderCard(p,showReview=false){
+  const emoji=getEmoji(p.name);
+  const inStock=p.stock_quantity>0&&p.is_available;
+  const low=inStock&&p.stock_quantity<=5;
+  const avgRating=p.avg_rating?`⭐ ${Number(p.avg_rating).toFixed(1)}`:'No reviews yet';
+  return `<div class="product-card" onclick="if(event.target.closest('.add-btn'))return;openProductModal(${p.id})" style="cursor:pointer">
+    <div class="product-img" style="${p.image_url?'padding:0;overflow:hidden':''}">
+      ${p.image_url
+        ?`<img src="${BASE}${p.image_url}" style="width:100%;height:100%;object-fit:cover;border-radius:0" onerror="this.style.display='none'">`
+        :''}
+      ${p.image_url?'':emoji}
+      ${!inStock?'<div class="product-badge out">Unavailable</div>':''}
+      ${low?`<div class="product-badge">Only ${p.stock_quantity} left!</div>`:''}
+    </div>
+    <div class="product-body">
+      <div class="product-cat">${p.category?.name||'Bakery'}</div>
+      <div class="product-name">${p.name}</div>
+      <div class="product-desc">${p.description||'Freshly baked with love and the finest ingredients.'}</div>
+      ${(p.tags||[]).length?`<div class="tags-row">${p.tags.map(t=>`<span class="tag-pill">${t.name}</span>`).join('')}</div>`:''}
+      <div class="product-footer">
+        <div class="product-price">€${Number(p.price).toFixed(2)}</div>
+        <button class="add-btn" onclick='addToCartById(${p.id})' ${!inStock?'disabled':''}><i class="ti ti-plus"></i></button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+        <span class="stock-text ${!inStock?'out':low?'low':''}">${inStock?p.stock_quantity+' in stock':'Out of stock'}</span>
+        <span style="font-size:11px;color:var(--gray)">${avgRating}</span>
+      </div>
+      <div style="margin-top:10px;font-size:12px;color:var(--gray);display:flex;align-items:center;gap:4px">
+        ${(p.reviews&&p.reviews.length)
+          ? `<span style="color:#F59E0B">${'★'.repeat(Math.round(p.reviews.reduce((s,r)=>s+r.rating,0)/p.reviews.length))}${'☆'.repeat(5-Math.round(p.reviews.reduce((s,r)=>s+r.rating,0)/p.reviews.length))}</span>
+             <span>${(p.reviews.reduce((s,r)=>s+r.rating,0)/p.reviews.length).toFixed(1)} · ${p.reviews.length} review${p.reviews.length>1?'s':''}</span>
+             <span style="margin-left:auto;color:var(--primary);font-weight:600;font-size:11px">Click to read →</span>`
+          : `<span>No reviews yet</span>
+             <span style="margin-left:auto;color:var(--primary);font-weight:600;font-size:11px">Click for details →</span>`
+        }
+      </div>
+    </div>
+  </div>`;
+}
+
+async function loadHeroGrid(){
+  try{
+    const r=await fetch(BASE+'/products');
+    const products=r.ok?await r.json():[];
+    if(!products.length) return;
+    const shuffled=products.filter(p=>p.is_available).sort(()=>Math.random()-0.5).slice(0,4);
+    const emojis=['🎂','🧁','🍰','🥐'];
+    for(let i=0;i<4;i++){
+      const card=document.getElementById('hc-'+i);
+      if(!card) continue;
+      const p=shuffled[i];
+      if(!p) continue;
+      const src=p.image_url ? BASE+p.image_url : getDefaultImage(p);
+      card.innerHTML='';
+      card.style.cssText='padding:0;overflow:hidden';
+      const img=document.createElement('img');
+      img.src=src;
+      img.alt=p?.name||'';
+      img.title=p?.name||'';
+      img.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:16px';
+      img.onerror=function(){
+        card.innerHTML=emojis[i];
+        card.style.cssText='';
+      };
+      card.appendChild(img);
+    }
+  }catch(e){}
+}
+
+async function loadHome(){
+  loadHeroGrid();
+  try{
+    const[pr,cr]=await Promise.all([fetch(BASE+'/products'),fetch(BASE+'/categories')]);
+    const products=pr.ok?await pr.json():[];
+    const cats=cr.ok?await cr.json():[];
+    allProducts=products;allCats=cats;
+    document.getElementById('h-products').textContent=products.length+'+';
+    document.getElementById('h-cats').textContent=cats.length;
+    const featured=products.filter(p=>p.is_available&&p.stock_quantity>0).slice(0,4);
+    document.getElementById('featured-grid').innerHTML=featured.length?featured.map(p=>renderCard(p)).join(''):'<div class="empty-state"><div class="empty-icon">🎂</div><div class="empty-title">No items yet</div><p>Add products via Admin panel</p></div>';
+  }catch(e){
+    document.getElementById('featured-grid').innerHTML='<div class="empty-state"><p style="color:var(--primary)">Cannot connect — is the server running on localhost:5000?</p></div>';
+  }
+}
+
+async function loadShop(){
+  const grid=document.getElementById('shop-grid');
+  grid.innerHTML='<div class="loading"><div class="spinner"></div>Loading fresh items...</div>';
+  try{
+    const[pr,cr]=await Promise.all([fetch(BASE+'/products'),fetch(BASE+'/categories')]);
+    allProducts=pr.ok?await pr.json():[];
+    allCats=cr.ok?await cr.json():[];
+    // Render category chips
+    document.getElementById('cats-strip').innerHTML=
+      '<div class="cat-chip active" onclick="filterCat(null,this)">🍽️ All Items</div>'+
+      allCats.map(c=>`<div class="cat-chip" onclick="filterCat(${c.id},this)">${getCatEmoji(c.name)} ${c.name}</div>`).join('');
+    renderShop(allProducts);
+  }catch(e){grid.innerHTML='<div class="empty-state"><p style="color:var(--primary)">API offline</p></div>';}
+}
+
+function filterCat(catId,el){
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  const filtered=catId?allProducts.filter(p=>p.category_id===catId):allProducts;
+  document.getElementById('shop-title').textContent=catId?allCats.find(c=>c.id===catId)?.name+' Items':'Everything We Bake';
+  document.getElementById('shop-sub').textContent=catId?`Showing ${filtered.length} items in this category`:'Browse our full collection';
+  renderShop(filtered);
+}
+
+function renderShop(products){
+  document.getElementById('item-count').textContent=products.length+' items';
+  document.getElementById('shop-grid').innerHTML=products.length?products.map(p=>renderCard(p,true)).join(''):'<div class="empty-state"><div class="empty-icon">🎂</div><div class="empty-title">No items here</div><p>Try a different category!</p></div>';
+}
+
+async function loadOrders(){
+  const el=document.getElementById('orders-list');
+  if(!token){el.innerHTML='<div class="empty-state"><div class="empty-icon">🔐</div><div class="empty-title">Login Required</div><p>Please login to view your orders</p><br><button class="btn-primary" onclick="openModal(\'auth-modal\')" style="font-size:13px;padding:10px 20px">Login</button></div>';return;}
+  try{
+    const r=await fetch(BASE+'/orders',{headers:hdr()});
+    const orders=r.ok?await r.json():[];
+    if(!orders.length){el.innerHTML='<div class="empty-state"><div class="empty-icon">📦</div><div class="empty-title">No orders yet</div><p>Place your first order!</p><br><button class="btn-primary" onclick="showPage(\'shop\');setActive(1)" style="font-size:13px;padding:10px 20px">Shop Now</button></div>';return;}
+    el.innerHTML=orders.map(o=>`<div class="order-card">
+      <div class="order-header">
+        <div class="order-id">Order #${o.id}</div>
+        ${statusBadge(o.status)}
+      </div>
+      <div class="order-items-list">
+        ${(o.order_items||[]).map(oi=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #F0DDD0">
+            <span>${getEmoji(oi.product?.name||'')} ${oi.product?.name||'Item'} ×${oi.quantity} — €${(oi.price*oi.quantity).toFixed(2)}</span>
+            ${o.status==='delivered'?`<button onclick="openReviewModal(${oi.product?.id},'${(oi.product?.name||'').replace(/'/g,"\'")}')" style="font-size:11px;background:var(--primary-light);color:var(--primary);border:1px solid var(--primary);padding:3px 10px;border-radius:6px;cursor:pointer;font-weight:600;white-space:nowrap;margin-left:8px">⭐ Review</button>`:''}
+          </div>`).join('')}
+      </div>
+      ${o.note?`<div style="font-size:12px;color:var(--gray);margin:8px 0;font-style:italic">📝 ${o.note}</div>`:''}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+        <div class="order-total">Total: €${o.total_price.toFixed(2)}</div>
+        <div style="font-size:12px;color:var(--gray)">${new Date(o.created_at).toLocaleDateString()}</div>
+      </div>
+      ${o.status==='pending'?`<button onclick="cancelOrder(${o.id})" style="margin-top:12px;background:none;border:1px solid #D63939;color:#D63939;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600">Cancel Order</button>`:''}
+    </div>`).join('');
+  }catch(e){el.innerHTML='<div class="empty-state"><p style="color:var(--primary)">API offline</p></div>';}
+}
+
+async function cancelOrder(id){
+  if(!confirm('Cancel this order?')) return;
+  try{
+    const r=await fetch(BASE+'/orders/'+id,{method:'DELETE',headers:hdr()});
+    const d=await r.json();
+    if(r.ok){toast('Order cancelled. Stock restored.','info');loadOrders();}
+    else toast(d.message||'Cannot cancel.','error');
+  }catch(e){}
+}
+
+// ── REVIEWS PAGE ─────────────────────────────────────────────────────────────
+async function loadReviewsPage(){
+  // Populate product dropdown
+  try{
+    const r=await fetch(BASE+'/products');
+    const products=r.ok?await r.json():[];
+    const sel=document.getElementById('review-product-select');
+    sel.innerHTML='<option value="">-- Choose a product --</option>'+
+      products.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  }catch(e){}
+  document.getElementById('product-reviews-list').innerHTML=
+    '<div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-title">Select a product</div><p>Choose a product above to see its reviews</p></div>';
+}
+
+async function loadProductReviews(){
+  const pid=document.getElementById('review-product-select').value;
+  const el=document.getElementById('product-reviews-list');
+  if(!pid){el.innerHTML='<div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-title">Select a product</div><p>Choose a product above to see its reviews</p></div>';return;}
+  try{
+    const r=await fetch(`${BASE}/products/${pid}/reviews`);
+    const reviews=r.ok?await r.json():[];
+    if(!reviews.length){
+      el.innerHTML='<div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-title">No reviews yet</div><p>Be the first to review this product!</p></div>';
+      return;
+    }
+    // Calculate average rating
+    const avg=(reviews.reduce((s,r)=>s+r.rating,0)/reviews.length).toFixed(1);
+    el.innerHTML=`
+      <div style="background:var(--white);border-radius:14px;padding:20px;margin-bottom:20px;box-shadow:0 4px 20px rgba(212,121,59,.08);display:flex;align-items:center;gap:20px">
+        <div style="text-align:center">
+          <div style="font-family:Playfair Display,serif;font-size:48px;font-weight:700;color:var(--dark);line-height:1">${avg}</div>
+          <div style="color:#F59E0B;font-size:20px">${'★'.repeat(Math.round(avg))}${'☆'.repeat(5-Math.round(avg))}</div>
+          <div style="font-size:12px;color:var(--gray);margin-top:4px">${reviews.length} review${reviews.length>1?'s':''}</div>
+        </div>
+        <div style="flex:1;border-left:1px solid #F0DDD0;padding-left:20px">
+          ${[5,4,3,2,1].map(n=>{
+            const count=reviews.filter(r=>r.rating===n).length;
+            const pct=Math.round((count/reviews.length)*100);
+            return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:12px;color:var(--gray);width:20px">${n}★</span>
+              <div style="flex:1;background:#F0DDD0;border-radius:999px;height:8px">
+                <div style="background:var(--primary);width:${pct}%;height:8px;border-radius:999px"></div>
+              </div>
+              <span style="font-size:12px;color:var(--gray);width:30px">${count}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+      ${reviews.map(rv=>`
+        <div class="review-card">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+            <div>
+              <div class="review-stars">${'★'.repeat(rv.rating)}${'☆'.repeat(5-rv.rating)}</div>
+              <div class="review-author">by ${rv.user?.username||'Anonymous'}</div>
+            </div>
+            ${userId&&rv.user_id===userId?`<button onclick="deleteReview(${rv.id})" style="background:none;border:1px solid #F0DDD0;color:var(--gray);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600">Delete</button>`:''}
+          </div>
+          <div class="review-comment">${rv.comment||'<em style="color:var(--gray)">No comment left</em>'}</div>
+          <div style="font-size:11px;color:var(--gray)">${new Date(rv.created_at).toLocaleDateString()}</div>
+        </div>`).join('')}`;
+  }catch(e){el.innerHTML='<div class="empty-state"><p style="color:var(--primary)">API offline</p></div>';}
+}
+
+function openReviewFromPage(){
+  const pid=document.getElementById('review-product-select').value;
+  const sel=document.getElementById('review-product-select');
+  const pname=sel.options[sel.selectedIndex]?.text||'';
+  if(!pid){toast('Please select a product first!','error');return;}
+  openReviewModal(pid,pname);
+}
+
+async function deleteReview(id){
+  if(!token){toast('Please login first.','error');return;}
+  if(!confirm('Delete your review?')) return;
+  try{
+    const r=await fetch(`${BASE}/reviews/${id}`,{method:'DELETE',headers:hdr()});
+    const d=await r.json();
+    if(r.ok){toast('Review deleted.','info');loadProductReviews();}
+    else toast(d.message||'Failed.','error');
+  }catch(e){toast('Error.','error');}
+}
+
+// ── PRODUCT DETAIL MODAL ─────────────────────────────────────────────────────
+let currentModalProduct = null;
+
+async function openProductModal(pid){
+  try{
+    const r = await fetch(BASE+'/products/'+pid);
+    const p = r.ok ? await r.json() : null;
+    if(!p) return;
+    currentModalProduct = p;
+
+    const inStock = p.stock_quantity > 0 && p.is_available;
+    const low = inStock && p.stock_quantity <= 5;
+
+    // Image & badge
+    const pmImg = document.getElementById('pm-img');
+    // Remove old image if any
+    const oldImg = pmImg.querySelector('img');
+    if(oldImg) oldImg.remove();
+    const oldEmoji = pmImg.querySelector('.pm-emoji');
+    if(oldEmoji) oldEmoji.remove();
+    if(p.image_url){
+      const img = document.createElement('img');
+      img.src = BASE + p.image_url;
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0';
+      img.onerror = function(){ this.remove(); const e=document.createElement('span');e.className='pm-emoji';e.textContent=getEmoji(p.name);pmImg.appendChild(e); };
+      pmImg.style.position = 'relative';
+      pmImg.insertBefore(img, pmImg.firstChild);
+    } else {
+      const e = document.createElement('span');
+      e.className = 'pm-emoji';
+      e.textContent = getEmoji(p.name);
+      pmImg.insertBefore(e, pmImg.firstChild);
+    }
+    const badge = document.getElementById('pm-badge');
+    if(badge){
+      if(!inStock){ badge.style.display='block'; badge.textContent='Out of Stock'; badge.style.background='#D63939'; }
+      else if(low){ badge.style.display='block'; badge.textContent=`Only ${p.stock_quantity} left!`; badge.style.background='var(--primary)'; }
+      else badge.style.display='none';
+    }
+
+    // Info
+    document.getElementById('pm-cat').textContent = p.category?.name || 'Bakery';
+    document.getElementById('pm-name').textContent = p.name;
+    document.getElementById('pm-desc').textContent = p.description || 'Freshly baked with love and the finest ingredients.';
+    document.getElementById('pm-price').textContent = '€' + Number(p.price).toFixed(2);
+
+    const stockEl = document.getElementById('pm-stock');
+    stockEl.textContent = inStock ? p.stock_quantity + ' in stock' : 'Out of stock';
+    stockEl.style.color = !inStock ? '#D63939' : low ? 'var(--primary)' : '#2D6A4F';
+
+    // Tags
+    const tagsEl = document.getElementById('pm-tags');
+    tagsEl.innerHTML = (p.tags||[]).map(t=>`<span class="tag-pill">${t.name}</span>`).join('') || '';
+
+    // Add to cart button
+    const addBtn = document.getElementById('pm-add-btn');
+    addBtn.disabled = !inStock;
+    addBtn.style.opacity = inStock ? '1' : '.5';
+    addBtn.style.cursor = inStock ? 'pointer' : 'not-allowed';
+
+    // Reviews
+    const reviews = p.reviews || [];
+    const avgEl = document.getElementById('pm-avg');
+    if(reviews.length){
+      const avg = (reviews.reduce((s,r)=>s+r.rating,0)/reviews.length).toFixed(1);
+      avgEl.innerHTML = `<span style="color:#F59E0B">${'★'.repeat(Math.round(avg))}${'☆'.repeat(5-Math.round(avg))}</span> ${avg} (${reviews.length})`;
+    } else {
+      avgEl.textContent = 'No reviews yet';
+    }
+
+    document.getElementById('pm-reviews').innerHTML = reviews.length === 0
+      ? '<div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">No reviews yet — be the first!</div>'
+      : reviews.map(rv=>`
+        <div style="padding:12px 0;border-bottom:1px solid #F0DDD0">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <div>
+              <span style="color:#F59E0B;font-size:14px">${'★'.repeat(rv.rating)}${'☆'.repeat(5-rv.rating)}</span>
+              <span style="font-size:12px;color:var(--gray);margin-left:8px">by ${rv.user?.username||'Anonymous'}</span>
+            </div>
+            <span style="font-size:11px;color:var(--gray)">${new Date(rv.created_at).toLocaleDateString()}</span>
+          </div>
+          ${rv.comment?`<div style="font-size:13px;color:var(--text);line-height:1.6">${rv.comment}</div>`:''}
+        </div>`).join('');
+
+    openModal('product-modal');
+  }catch(e){ toast('Could not load product details.','error'); }
+}
+
+function addToCartFromModal(){
+  if(currentModalProduct) addToCart(currentModalProduct);
+}
+
+// ── PROFILE ──────────────────────────────────────────────────────────────────
+function getProfileUserId(){
+  try{
+    const payload=JSON.parse(atob(token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+    return parseInt(payload.sub);
+  }catch(e){return null;}
+}
+
+async function openProfile(){
+  const uid=getProfileUserId();
+  if(!uid) return;
+  try{
+    const r=await fetch(`${BASE}/users/${uid}`,{headers:hdr()});
+    const d=await r.json();
+    document.getElementById('profile-name').textContent=d.username;
+    document.getElementById('profile-username').textContent=d.username;
+    document.getElementById('profile-email').textContent=d.email||'No email set';
+    document.getElementById('profile-email-input').value=d.email||'';
+    document.getElementById('profile-role').textContent=d.role||'customer';
+    // Clear password fields
+    ['curr-pass','new-pass','conf-pass'].forEach(id=>document.getElementById(id).value='');
+    openModal('profile-modal');
+  }catch(e){toast('Could not load profile.','error');}
+}
+
+async function updateProfileEmail(){
+  const uid=getProfileUserId();
+  const email=document.getElementById('profile-email-input').value.trim();
+  if(!email){toast('Please enter an email.','error');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){toast('Please enter a valid email.','error');return;}
+  try{
+    const r=await fetch(`${BASE}/users/${uid}`,{method:'PUT',headers:hdr(),body:JSON.stringify({email})});
+    const d=await r.json();
+    if(r.ok){toast('Email updated successfully! ✅');document.getElementById('profile-email').textContent=email;}
+    else toast(d.message||'Failed to update email.','error');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+async function updateProfilePassword(){
+  const uid=getProfileUserId();
+  const curr=document.getElementById('curr-pass').value.trim();
+  const newp=document.getElementById('new-pass').value.trim();
+  const conf=document.getElementById('conf-pass').value.trim();
+  if(!curr){toast('Please enter your current password.','error');return;}
+  if(!newp||newp.length<4){toast('New password must be at least 4 characters.','error');return;}
+  if(newp!==conf){toast('New passwords do not match.','error');return;}
+  try{
+    const r=await fetch(`${BASE}/users/${uid}/password`,{method:'PATCH',headers:hdr(),body:JSON.stringify({current_password:curr,new_password:newp})});
+    const d=await r.json();
+    if(r.ok){
+      toast('Password changed! Please login again.','success');
+      closeModal('profile-modal');
+      setTimeout(()=>window.location.reload(),1500);
+    }else toast(d.message||'Failed.','error');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+// ── SEARCH ───────────────────────────────────────────────────────────────────
+let searchTimer = null;
+
+function onSearchInput(){
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(()=> doSearch(), 350);
+}
+
+async function doSearch(){
+  const q = document.getElementById('search-input')?.value.trim() || '';
+  const min = document.getElementById('min-price')?.value || '';
+  const max = document.getElementById('max-price')?.value || '';
+
+  if(!q && !min && !max){ renderShop(allProducts); document.getElementById('item-count').textContent=allProducts.length+' items'; return; }
+
+  let url = BASE+'/products/search?';
+  const params = [];
+  if(q) params.push('q='+encodeURIComponent(q));
+  if(min) params.push('min_price='+min);
+  if(max) params.push('max_price='+max);
+  url += params.join('&');
+
+  document.getElementById('shop-grid').innerHTML='<div class="loading"><div class="spinner"></div>Searching...</div>';
+  try{
+    const r = await fetch(url);
+    if(r.status===404){ renderShop([]); document.getElementById('item-count').textContent='0 items'; return; }
+    const results = r.ok ? await r.json() : [];
+    renderShop(results);
+    document.getElementById('item-count').textContent=results.length+' results found';
+    document.getElementById('shop-title').textContent='Search Results';
+    document.getElementById('shop-sub').textContent=`Showing results for "${q}"`;
+  }catch(e){ toast('Search error.','error'); }
+}
+
+function clearSearch(){
+  document.getElementById('search-input').value='';
+  document.getElementById('min-price').value='';
+  document.getElementById('max-price').value='';
+  document.getElementById('shop-title').textContent='Everything We Bake';
+  document.getElementById('shop-sub').textContent='Browse our full collection of handcrafted treats';
+  renderShop(allProducts);
+  document.getElementById('item-count').textContent=allProducts.length+' items';
+}
+
+async function showFeatured(){
+  document.getElementById('shop-grid').innerHTML='<div class="loading"><div class="spinner"></div>Loading featured...</div>';
+  try{
+    const r = await fetch(BASE+'/products/featured');
+    if(r.status===404){ renderShop([]); toast('No featured products yet.','info'); return; }
+    const results = r.ok ? await r.json() : [];
+    renderShop(results);
+    document.getElementById('shop-title').textContent='⭐ Featured Products';
+    document.getElementById('shop-sub').textContent='Our bestselling handcrafted treats';
+    document.getElementById('item-count').textContent=results.length+' items';
+    // Clear search
+    document.getElementById('search-input').value='';
+    document.getElementById('min-price').value='';
+    document.getElementById('max-price').value='';
+    // Deselect category chips
+    document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  }catch(e){ toast('Could not load featured.','error'); }
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+loadHome();
+</script>
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal-box" style="max-width:560px;padding:0;overflow:hidden;max-height:90vh;display:flex;flex-direction:column">
+    <button class="modal-close" style="position:absolute;top:16px;right:16px;z-index:10;background:rgba(255,255,255,.9);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center" onclick="closeModal('product-modal')"><i class="ti ti-x"></i></button>
+
+    <!-- Product Image -->
+    <div id="pm-img" style="height:200px;background:linear-gradient(135deg,#FDE8D8,#F5D5C0);display:flex;align-items:center;justify-content:center;font-size:96px;position:relative;flex-shrink:0">
+      🎂
+      <div id="pm-badge" style="position:absolute;top:14px;left:14px;display:none;background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px"></div>
+    </div>
+
+    <!-- Product Info -->
+    <div style="padding:24px;overflow-y:auto;flex:1">
+      <div id="pm-cat" style="font-size:11px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px"></div>
+      <div id="pm-name" style="font-family:Playfair Display,serif;font-size:26px;font-weight:700;color:var(--dark);margin-bottom:10px"></div>
+      <div id="pm-desc" style="font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:16px"></div>
+
+      <!-- Tags -->
+      <div id="pm-tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
+
+      <!-- Price + Stock + Add to cart -->
+      <div style="display:flex;align-items:center;justify-content:space-between;background:var(--cream);border-radius:12px;padding:16px;margin-bottom:20px">
+        <div>
+          <div id="pm-price" style="font-family:Playfair Display,serif;font-size:32px;font-weight:700;color:var(--dark)"></div>
+          <div id="pm-stock" style="font-size:12px;font-weight:600;margin-top:4px"></div>
+        </div>
+        <button id="pm-add-btn" class="btn-primary" style="padding:14px 28px;font-size:15px" onclick="addToCartFromModal()">
+          <i class="ti ti-shopping-cart"></i> Add to Cart
+        </button>
+      </div>
+
+      <!-- Reviews Section -->
+      <div style="border-top:1px solid #F0DDD0;padding-top:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div style="font-size:14px;font-weight:600;color:var(--dark)">Customer Reviews</div>
+          <div id="pm-avg" style="font-size:13px;color:var(--gray)"></div>
+        </div>
+        <div id="pm-reviews">
+          <div style="text-align:center;padding:20px;color:var(--gray);font-size:13px">No reviews yet — be the first!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal-box" style="max-width:460px">
+    <button class="modal-close" onclick="closeModal('profile-modal')"><i class="ti ti-x"></i></button>
+    <div class="modal-icon">👤</div>
+    <div class="modal-title" id="profile-name">My Profile</div>
+    <div class="modal-sub" id="profile-email">—</div>
+
+    <div style="background:var(--cream);border-radius:12px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--gray)">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span>Username</span><span style="color:var(--dark);font-weight:600" id="profile-username">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span>Role</span><span style="color:var(--primary);font-weight:600" id="profile-role">—</span>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Update Email</label>
+      <input type="email" id="profile-email-input" placeholder="your@email.com">
+    </div>
+    <button class="modal-submit" onclick="updateProfileEmail()" style="margin-bottom:10px">
+      Save Email
+    </button>
+
+    <div style="border-top:1px solid #F0DDD0;padding-top:16px;margin-top:6px">
+      <div style="font-size:12px;font-weight:600;color:var(--gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">Change Password</div>
+      <div class="form-field"><label>Current Password</label><input type="password" id="curr-pass" placeholder="••••••••"></div>
+      <div class="form-field"><label>New Password</label><input type="password" id="new-pass" placeholder="••••••••"></div>
+      <div class="form-field"><label>Confirm New Password</label><input type="password" id="conf-pass" placeholder="••••••••"></div>
+      <button class="modal-submit" onclick="updateProfilePassword()">Change Password</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

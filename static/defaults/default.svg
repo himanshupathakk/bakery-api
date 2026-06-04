@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#FDE8D8"/>
+  <!-- cake layers -->
+  <rect x="100" y="185" width="200" height="65" rx="10" fill="#D4793B"/>
+  <rect x="115" y="150" width="170" height="45" rx="8" fill="#E8956D"/>
+  <rect x="130" y="120" width="140" height="38" rx="6" fill="#F5B896"/>
+  <!-- candles -->
+  <rect x="165" y="92" width="7" height="30" rx="2" fill="#F5E6D3"/>
+  <rect x="197" y="92" width="7" height="30" rx="2" fill="#F5E6D3"/>
+  <rect x="229" y="92" width="7" height="30" rx="2" fill="#F5E6D3"/>
+  <ellipse cx="168" cy="89" rx="5" ry="8" fill="#FF9F43"/>
+  <ellipse cx="200" cy="89" rx="5" ry="8" fill="#FF9F43"/>
+  <ellipse cx="232" cy="89" rx="5" ry="8" fill="#FF9F43"/>
+  <text x="200" y="285" text-anchor="middle" font-family="Georgia" font-size="16" fill="#B85E26" opacity="0.6">Sweet Crumbs</text>
+</svg>
